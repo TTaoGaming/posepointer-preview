@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "params": {
+    "dwell": { "type": "int", "min": 600, "max": 2000, "key": "dwellMs" },
+    "settle": { "type": "int", "min": 0, "max": 800, "key": "settleMs" },
+    "settledist": { "type": "float", "min": 5, "max": 60, "key": "settlePx" },
+    "leave": { "type": "float", "min": 0.04, "max": 0.12, "key": "leaveRadius" },
+    "drain": { "type": "float", "min": 0.5, "max": 4, "key": "drainRate" },
+    "mirror": { "type": "float", "min": 0, "max": 1, "key": "mirror" },
+    "silent": { "type": "flag", "key": "silent" },
+    "level": { "type": "int", "min": 1, "max": 12, "key": "level" },
+    "locale": { "type": "locale", "key": "locale" }
+  }
+}

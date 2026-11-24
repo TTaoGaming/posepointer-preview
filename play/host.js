@@ -1,5 +1,7 @@
 // Copyright Tao. All rights reserved.
 import { createApp } from './gcompris-app.js';
+import { loadAppConfig } from './app-config.js';
+import { loadLegacyBinding } from './app-config.js';
 
 const byId = id => document.getElementById(id);
 const stage = byId('stage'), frame = byId('activity'), video = byId('camera');
@@ -9,7 +11,7 @@ const adapterFiles = {
   sense: { 'mediapipe-hands': 'sense-camera', 'external-frames': 'sense-external' },
   cursor: { fingertip: 'fingertip' },
   filter: { 'one-euro': 'one-euro' },
-  interaction: { dwell: 'dwell' },
+  interaction: { dwell: 'dwell', modes: 'modes' },
   sink: { 'dom-mouse-pointer': 'dom-mouse-pointer' },
   overlays: { 'cursor-ring': 'cursor-ring', 'hand-skin': 'hand-skin', mirror: 'mirror' }
 };
@@ -68,23 +70,33 @@ async function showOfflineStatus() {
   }
 }
 
-async function loadAdapter(port, config) {
+async function loadAdapter(port, config, tracer = false) {
   const catalog = adapterFiles[port];
   if (!Object.hasOwn(catalog, config?.id)) throw new Error(`Unknown ${port} adapter: ${config?.id ?? '(missing)'}`);
-  const module = await import(`./adapters/${catalog[config.id]}.js`);
+  let file = catalog[config.id];
+  if (tracer && file === 'sense-camera') file = 'tracer-camera';
+  if (tracer && file === 'dom-mouse-pointer') file = 'tracer-pointer';
+  const module = await import(`./adapters/${file}.js`);
   return { factory: module.create, config };
 }
 
 async function boot() {
-  const binding = await readJson('./bindings/gcompris-web.fingertip-dwell.json');
+  const appCfg = document.body.dataset.app
+    ? await loadAppConfig({ fetchJson: readJson, search: location.search })
+    : null;
+  const binding = appCfg?.binding ?? await loadLegacyBinding(readJson);
   assertSafety(binding);
   const ports = ['sense', 'cursor', 'filter', 'interaction', 'sink'];
+  const overlayConfigs = binding.overlays.filter(config => !appCfg || config.id !== 'mirror');
   const [loaded, overlayFactories] = await Promise.all([
-    Promise.all(ports.map(port => loadAdapter(port, binding[port]))),
-    Promise.all(binding.overlays.map(config => loadAdapter('overlays', config)))
+    Promise.all(ports.map(port => loadAdapter(port, binding[port], !!appCfg))),
+    Promise.all(overlayConfigs.map(config => loadAdapter('overlays', config)))
   ]);
   if (binding.app !== 'gcompris-web') throw new Error(`Unknown app profile: ${binding.app}`);
-  const app = createApp(frame, await readJson(`./profiles/${binding.app}.json`));
+  if (appCfg) console.info('posepointer launch', JSON.stringify(appCfg.args));
+  const app = appCfg
+    ? createApp(frame, appCfg.profile, appCfg.args)
+    : createApp(frame, await readJson(`./profiles/${binding.app}.json`));
   let width = 1, height = 1;
   const context = {
     app, video, skin: byId('skin'), cursor: byId('cursor'),
@@ -94,14 +106,22 @@ async function boot() {
   const build = ({ factory, config }) => factory(context, config);
   const [senseFactory, cursorFactory, ...parts] = loaded;
   const cursor = cursorFactory.factory(context, cursorFactory.config, binding.interaction.hand);
-  const [filter, interaction, sink] = parts.map(build);
+  const [filterFactory, interactionFactory, sinkFactory] = parts;
+  const filter = build(filterFactory), sink = build(sinkFactory);
+  const interaction = interactionFactory.factory(context, appCfg?.config ?? interactionFactory.config);
   const overlays = await Promise.all(overlayFactories.map(build));
+  if (appCfg) overlays.push({
+    draw({ camera }) {
+      video.hidden = !camera;
+      frame.style.opacity = camera ? 1 - appCfg.config.mirror : 1;
+    }
+  });
   const stallMs = binding.safety.stallMs ?? 500;
   const minFps = binding.interaction.minFps ?? 10;
 
   let source, watchdog, ticker, paused = false, camera = false, lastFrame = -Infinity;
   const frameTimes = [];
-  let visual = {};
+  let visual = {}, latestHand;
 
   function draw(values = visual) {
     visual = values;
@@ -128,11 +148,36 @@ async function boot() {
     }
   }
 
-  function resetInput(clearRearm = false) {
-    send(interaction.reset(performance.now(), clearRearm));
+  function drawTracer(layer) {
+    const { cursor } = layer;
+    draw({
+      point: cursor.visible ? cursor : null,
+      hand: cursor.visible ? latestHand : null,
+      progress: cursor.progress,
+      pressed: cursor.pressed,
+      phase: cursor.phase
+    });
+  }
+
+  if (appCfg) {
+    function onTouch(event) {
+      send(interaction.touch(performance.now(), event.isTrusted));
+      if (event.isTrusted && source && !paused) drawTracer(interaction.state(performance.now()));
+    }
+    const touchEvents = ['pointerdown', 'touchstart', 'mousedown'];
+    for (const type of touchEvents) document.addEventListener(type, onTouch, true);
+    frame.addEventListener('load', () => {
+      const { contentDocument } = frame;
+      for (const type of touchEvents) contentDocument?.addEventListener(type, onTouch, true);
+    });
+  }
+
+  function resetInput(clearRearm = false, keepFrameHistory = false) {
+    send(interaction.reset(performance.now(), appCfg ? { keepFrameHistory } : clearRearm));
     sink.release();
     filter.reset();
     frameTimes.length = 0;
+    latestHand = null;
     draw({});
   }
 
@@ -142,7 +187,7 @@ async function boot() {
     clearTimeout(watchdog);
     watchdog = setTimeout(() => {
       cursor.reset();
-      resetInput();
+      resetInput(false, true);
       if (!paused) status.textContent = 'Waiting for frames';
     }, stallMs);
 
@@ -155,12 +200,22 @@ async function boot() {
     let point;
     if (inBounds) {
       point = filter.update(tip, sample.t);
-      sink.send('pointermove', point);
+      if (!appCfg) sink.send('pointermove', point);
     } else {
       filter.reset();
     }
     send(interaction.frame(sample.t, hand && { hand: hand.points, point }));
     const layer = interaction.state(sample.t);
+    if (appCfg) {
+      latestHand = hand?.points;
+      drawTracer(layer);
+      const message = layer.status === 'low_fps' ? 'Camera input too slow'
+        : !point ? 'Show your hand'
+        : layer.cursor.phase !== 'none' ? 'Hold still to press the button'
+        : 'Trace the letter';
+      if (status.textContent !== message) status.textContent = message;
+      return;
+    }
     draw({ point, hand: hand?.points, progress: layer.cursor.progress, pressed: layer.cursor.pressed });
     const message = layer.status === 'low_fps' ? `Input too slow for dwell (${fps} fps, needs ${minFps})`
       : point ? `Hold still to click (${fps} fps)` : `Show your hand (${fps} fps)`;
@@ -202,7 +257,16 @@ async function boot() {
       camera = !!video.srcObject;
       pause.disabled = false;
       ticker = setInterval(() => {
-        if (!paused) send(interaction.tick(performance.now()));
+        if (paused) return;
+        const t = performance.now();
+        send(interaction.tick(t));
+        if (appCfg) {
+          const layer = interaction.state(t);
+          drawTracer(layer);
+          if (layer.status === 'low_fps' && status.textContent !== 'Camera input too slow') {
+            status.textContent = 'Camera input too slow';
+          }
+        }
       }, 25);
       draw();
       status.textContent = 'Show your hand';

@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "version": "384c13c5b5e67f9b",
-  "file_count": 105,
-  "total_bytes": 128630437,
+  "version": "88c7d5b7f79fa845",
+  "file_count": 121,
+  "total_bytes": 128669940,
   "files": [
     {
       "path": "LICENSES/GCompris-COPYING.html",
@@ -31,8 +31,8 @@
     },
     {
       "path": "play/adapters/cursor-ring.js",
-      "bytes": 403,
-      "sha256": "aea310de37126993d373b94a0ea734a5dfa0249734b340813920abfdf72ca844"
+      "bytes": 526,
+      "sha256": "dd5ec83a0d3de0ebbe876359bcb752c65f88d2baf59d54827cf616b35a7d4c79"
     },
     {
       "path": "play/adapters/dom-mouse-pointer.js",
@@ -60,9 +60,14 @@
       "sha256": "94a12ab24c83577c6a32a2e568ae905fa4e2ffdca42021892f40a975cbdda50f"
     },
     {
+      "path": "play/adapters/modes.js",
+      "bytes": 3618,
+      "sha256": "fe8bfe76fa7df3adb13576eca8a560d6648ba99e7bcf32a1b88bcf9cc2b7281a"
+    },
+    {
       "path": "play/adapters/one-euro.js",
-      "bytes": 1300,
-      "sha256": "30c6c509ef458d57dd792cb55e4145ad27bf9574d2e66d5ecc7ce1106d7de91d"
+      "bytes": 1419,
+      "sha256": "9fc0cfba8d0b3f5503b510a2839ff22f483709d3dd9bc911231d5909b858009e"
     },
     {
       "path": "play/adapters/sense-camera.js",
@@ -75,6 +80,21 @@
       "sha256": "7f68e6c7169903a49d301c983d26a7c89aa4c1e379cda43272b839f02b217c46"
     },
     {
+      "path": "play/adapters/tracer-camera.js",
+      "bytes": 5072,
+      "sha256": "ec54685d77f7245227ef2b49d4e262b44e812fb07dd3bf3817e665e9af611462"
+    },
+    {
+      "path": "play/adapters/tracer-pointer.js",
+      "bytes": 1505,
+      "sha256": "fa08c1cf59192cf481d280a7fbd712b42420478a8540422b09e824b43c669d00"
+    },
+    {
+      "path": "play/app-config.js",
+      "bytes": 1036,
+      "sha256": "3cde2ba0ec7f02689124ed7bdc733837d550b209b4157b0bcff6191dd481b397"
+    },
+    {
       "path": "play/bindings/gcompris-web.fingertip-dwell.json",
       "bytes": 701,
       "sha256": "d7ed4cff0bec50e31f43e761966812b5ef7c4a697c2ef6c63b8d550476435588"
@@ -85,14 +105,49 @@
       "sha256": "b689aadce321a8eebb1677296b5fa49a9f78ba940c15a8e03c6914fae76ef59a"
     },
     {
+      "path": "play/core/dwell-core.js",
+      "bytes": 4535,
+      "sha256": "3b40d834cbdf32b2db2ddeb7b4bb2e2309e72b0262d9b629778a9bd9ab70a478"
+    },
+    {
+      "path": "play/core/input-rules.js",
+      "bytes": 1273,
+      "sha256": "1e8cbf80a0f92a737814bdd1382fb1542c960bb2401b7d1edf25e6d0f61ca96e"
+    },
+    {
+      "path": "play/core/launch-args.js",
+      "bytes": 414,
+      "sha256": "e300c747bb6351ca00daaaf53bc41fa320e2a2fdc629211160d797bb3e785f75"
+    },
+    {
+      "path": "play/core/pen-core.js",
+      "bytes": 2853,
+      "sha256": "8745c2db23b3f0a471b04d1e0b6bf4f9feeddb217c6d007ed50151ba50bb92c5"
+    },
+    {
+      "path": "play/core/profile-check.js",
+      "bytes": 6631,
+      "sha256": "0edcc0829537ad013bbae9edb26fc84c831aca61f97dfa79e5b6a3b7e8344683"
+    },
+    {
+      "path": "play/core/touch-wins.js",
+      "bytes": 648,
+      "sha256": "c72bf709b803b7ba46dfca96c749231785d1246c5f1f1084db23cf7063556529"
+    },
+    {
+      "path": "play/core/url-params.js",
+      "bytes": 2556,
+      "sha256": "40099d073d320dfa8307f2662cf6b4878b48bd9f31643c3f7347dfcc9ebe6784"
+    },
+    {
       "path": "play/credits.html",
       "bytes": 1233,
-      "sha256": "24d7b35dd2d278c315bf7f4ee80311edf9cc67d322b8151dae16a886207dba9c"
+      "sha256": "620b479d9a09f3926c6a9abb32fe8886682e15534b7f43978f77595ed665751a"
     },
     {
       "path": "play/gcompris-app.js",
-      "bytes": 8433,
-      "sha256": "7ed246a4763e2d3a08b359d6e4b711bf5a8bd86f116979c2b1906363550db54a"
+      "bytes": 8715,
+      "sha256": "4e56432d3857a01e4c6f9b64da02e96755b780ed28178234007907c393e2b1e9"
     },
     {
       "path": "play/gcompris/gcompris-qt.data",
@@ -476,13 +531,13 @@
     },
     {
       "path": "play/host.css",
-      "bytes": 2307,
-      "sha256": "b4adc795acbab0560b08f649aad8766760b915c4e0113652a9d39f5f23801a69"
+      "bytes": 3125,
+      "sha256": "ea141d350baec4b6bf77c8727d98a3aa1dda575193c7021172158ba977ccc2b2"
     },
     {
       "path": "play/host.js",
-      "bytes": 9063,
-      "sha256": "52b3739dd1368bde327052087d17c02ed5fadd8934cddef4e612dab3d06887e2"
+      "bytes": 11698,
+      "sha256": "f2661871c8e29d87ff36fc06db8cd32effa6f2d36b34a06436c116d0d1a59f21"
     },
     {
       "path": "play/index.html",
@@ -520,14 +575,39 @@
       "sha256": "e20255be9dba7565f6bb35f3b510440848fec3eccb888730f9d50b4b70b3066d"
     },
     {
+      "path": "play/tuning.json",
+      "bytes": 667,
+      "sha256": "b2a4d32b4ff8a496a99fac448405bebf6e3196a57d4da23d7b0e13ba6c7ac3fb"
+    },
+    {
       "path": "preview-notice.txt",
       "bytes": 33,
       "sha256": "94adfd374800118a32f35bbd47c79bd3d1c1b15e27866178465e10c03cf723bc"
     },
     {
       "path": "sw.js",
-      "bytes": 4894,
-      "sha256": "745930e3abb1830e95f04cceeef1aebbd226c701d562f4076f1363403a6cdfb4"
+      "bytes": 4968,
+      "sha256": "452d800f5c49804699169f488a0b76383e55831943dab48a28346be6f4b0615c"
+    },
+    {
+      "path": "trace-letters/binding.json",
+      "bytes": 1468,
+      "sha256": "a286056ba0827513c8f69a06e6e314baea63b940f77b1f516860df56be4c4ca1"
+    },
+    {
+      "path": "trace-letters/index.html",
+      "bytes": 1607,
+      "sha256": "f3cfc4de5720020c250f33cf9d7d243cde44628ae739e6c37bae26f0eb406433"
+    },
+    {
+      "path": "trace-letters/manifest.webmanifest",
+      "bytes": 393,
+      "sha256": "98e6136beb73cc5b5006b971e68615a210fb6b1829bb1e4891b61cb3bf9a1ecb"
+    },
+    {
+      "path": "trace-letters/profile.json",
+      "bytes": 1176,
+      "sha256": "2126506280b208cab213db851b95ba2ac37e9ccf7cf4b8fccce577050cf91e22"
     }
   ]
 }

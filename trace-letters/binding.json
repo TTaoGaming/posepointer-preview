@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "product": "posepointer-classroom",
+  "app": "gcompris-web",
+  "sense": { "id": "mediapipe-hands", "hands": 1, "pose": "off", "camera": { "profile": "standard" }, "delegate": "CPU" },
+  "cursor": { "id": "fingertip", "tip": 8 },
+  "filter": { "id": "one-euro", "predictionMs": 20, "minCutoffHz": 3 },
+  "interaction": {
+    "id": "modes",
+    "hand": "right",
+    "mode": "pen",
+    "touchQuietMs": 1000,
+    "pen": {
+      "lostMs": 300,
+      "margin": 0.01,
+      "layouts": {
+        "landscape": {
+          "paper": { "x0": 0.289, "y0": 0.05, "x1": 0.711, "y1": 0.85 },
+          "silent": [{ "x0": 0, "y0": 0.857, "x1": 0.5, "y1": 1 }]
+        },
+        "portrait": {
+          "paper": { "x0": 0.03, "y0": 0.05, "x1": 0.97, "y1": 0.90 },
+          "silent": [{ "x0": 0, "y0": 0.92, "x1": 0.91, "y1": 1 }]
+        }
+      }
+    },
+    "tap": {
+      "dwell": {
+        "dwellMs": 1200,
+        "settleMs": 400,
+        "settlePx": 20,
+        "refWidthPx": 1280,
+        "enterRadius": 0.035,
+        "leaveRadius": 0.07,
+        "drainRate": 2,
+        "lostMs": 300,
+        "minFps": 5,
+        "fpsWindowMs": 1000,
+        "aspect": 0.5625
+      }
+    }
+  },
+  "sink": { "id": "dom-mouse-pointer" },
+  "overlays": [
+    { "id": "cursor-ring" },
+    { "id": "hand-skin", "skin": "wireframe" },
+    { "id": "mirror", "opacity": 0.35 }
+  ],
+  "safety": { "activeHandLock": true, "killSwitch": true, "stallRelease": true, "stallMs": 500 }
+}

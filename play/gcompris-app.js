@@ -1,7 +1,7 @@
 // Copyright Tao. All rights reserved.
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-export function createApp(frame, profile) {
+export function createApp(frame, profile, args) {
   const canvas = () => {
     const root = frame.contentDocument?.querySelector(profile.shadowRoot)?.shadowRoot;
     const canvases = [...(root?.querySelectorAll(profile.canvas) ?? [])];
@@ -37,7 +37,7 @@ export function createApp(frame, profile) {
     const button = doc.querySelector(profile.start.selector);
     if (!button) throw new Error(`Missing GCompris start button: ${profile.start.selector}`);
     const win = frame.contentWindow;
-    prepareStockApp(win);
+    prepareStockApp(win, args);
     const firstRun = profile.firstRun;
     const log = win.console.log;
     let firstRunInfo;
@@ -166,7 +166,7 @@ function readDialogPaint(win, canvas, context, insets) {
   });
 }
 
-function prepareStockApp(win) {
+function prepareStockApp(win, args) {
   // The stock launcher registers a cache worker and mounts IndexedDB. Keep
   // those two operations out of the hosted session and leave Qt's MEMFS in use.
   Object.defineProperty(win.navigator, 'serviceWorker', { value: { register: async () => undefined } });
@@ -176,6 +176,14 @@ function prepareStockApp(win) {
     config.preRun = config.preRun.filter(step => step.name !== 'mountPersistentStorage');
     return create.call(this, config);
   };
+  if (args !== undefined) {
+    const qtLoad = win.qtLoad;
+    if (typeof qtLoad !== 'function') throw new Error('Missing GCompris Qt loader.');
+    win.qtLoad = function (config) {
+      config.arguments = args;
+      return qtLoad.call(this, config);
+    };
+  }
 
   // Cover Qt's network entry points on static hosts that ignore _headers.
   const isLocal = resource => new URL(resource?.url ?? resource, win.location.href).origin === win.location.origin;

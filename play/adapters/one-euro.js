@@ -2,10 +2,12 @@
 const alpha = (cutoff, dt) => 1 / (1 + 1 / (2 * Math.PI * cutoff * dt));
 const clamp = n => Math.max(0, Math.min(1, n));
 
-// pp-ts One Euro filter, with the parameters used by its hand core.
+// pp-ts One Euro filter with a configurable minimum position cutoff.
 class OneEuro {
   xPrev = null;
   dxPrev = 0;
+
+  constructor(minCutoffHz) { this.minCutoffHz = minCutoffHz; }
 
   reset() { this.xPrev = null; this.dxPrev = 0; }
 
@@ -17,14 +19,14 @@ class OneEuro {
     const dx = (x - this.xPrev) / dt;
     const ad = alpha(1, dt);
     this.dxPrev = ad * dx + (1 - ad) * this.dxPrev;
-    const a = alpha(1 + .05 * Math.abs(this.dxPrev), dt);
+    const a = alpha(this.minCutoffHz + .05 * Math.abs(this.dxPrev), dt);
     this.xPrev = a * x + (1 - a) * this.xPrev;
     return this.xPrev;
   }
 }
 
-export function create(_, { predictionMs = 0 }) {
-  const fx = new OneEuro(), fy = new OneEuro();
+export function create(_, { predictionMs = 0, minCutoffHz = 1 }) {
+  const fx = new OneEuro(minCutoffHz), fy = new OneEuro(minCutoffHz);
   let last, lastT;
   return {
     update(point, t) {

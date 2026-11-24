@@ -23,3 +23,12 @@ video, canvas, #cursor, #app-status { pointer-events: none }
 #cursor::before { content: ""; width: 17px; height: 17px; border-radius: 50%; background: #fbfffd; border: 2px solid #102632 }
 #cursor[data-pressed="true"]::before { background: #8cf8ce }
 #app-status { position: absolute; inset: 0; display: grid; place-content: center; padding: 1rem; text-align: center; background: #102632e8; font-size: 1.2rem; font-weight: 650 }
+body[data-app] .brand { display: inline-flex; align-items: center; min-height: 44px; padding-inline: .3rem }
+body[data-app] #cursor { --arc: #8cf8ce; background: conic-gradient(var(--arc) var(--progress, 0turn), #102632b8 0) }
+body[data-app] #cursor::before { width: 20px; height: 20px; background: #102632; border: 0 }
+body[data-app] #cursor[data-phase="draining"] { --arc: #ffca7a }
+body[data-app] #cursor[data-phase="done"] { animation: dwell-acknowledge .4s step-end forwards }
+body[data-app] #cursor[data-phase="none"] { width: 14px; height: 14px; background: transparent; border: 2px solid #fbfffd }
+body[data-app] #cursor[data-phase="none"]::before { content: none }
+body[data-app] #cursor[data-pressed="true"] { background: #8cf8ce }
+@keyframes dwell-acknowledge { to { background: #102632b8; opacity: .65 } }

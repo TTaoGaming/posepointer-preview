@@ -1,0 +1,32 @@
+<!-- Copyright Tao. All rights reserved. -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; frame-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'none'">
+  <title>Letter Tracer · GCompris</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="../play/host.css">
+</head>
+<body data-app="trace-letters">
+  <header>
+    <div id="preview-notice" role="status" hidden></div>
+    <a href="../" class="brand">Home</a>
+    <button id="start-camera" type="button" disabled>Start camera</button>
+    <button id="pause" type="button" disabled>Pause</button>
+    <button id="kill" type="button" disabled>Stop camera</button>
+    <output id="input-status" role="status">Camera off</output>
+    <output id="offline-status" role="status"></output>
+  </header>
+  <main id="stage">
+    <video id="camera" playsinline muted hidden></video>
+    <iframe id="activity" title="GCompris letter tracing" allow="camera 'none'; microphone 'none'"></iframe>
+    <canvas id="skin" aria-hidden="true"></canvas>
+    <div id="cursor" aria-hidden="true" hidden></div>
+    <output id="app-status" role="status">Starting...</output>
+  </main>
+  <script type="module" src="../play/host.js"></script>
+  <script type="module" src="../play/notice.js"></script>
+</body>
+</html>
