@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "version": "39afee6a09cee917",
-  "file_count": 103,
-  "total_bytes": 128628662,
+  "version": "384c13c5b5e67f9b",
+  "file_count": 105,
+  "total_bytes": 128630437,
   "files": [
     {
       "path": "LICENSES/GCompris-COPYING.html",
@@ -26,8 +26,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 1499,
-      "sha256": "255a04498c6d6bc67f56031983b325458f0a382157c2ceff33db7a24c2de869c"
+      "bytes": 1749,
+      "sha256": "ad582c9ad8c77e83578932a98d5a435768cbc21e6d15d084fbf78d7d88a6409c"
     },
     {
       "path": "play/adapters/cursor-ring.js",
@@ -76,18 +76,18 @@
     },
     {
       "path": "play/bindings/gcompris-web.fingertip-dwell.json",
-      "bytes": 702,
-      "sha256": "e4fe54ece97ce97876d8e1009974c3815af0daa8662c6628565bff889c7dd441"
+      "bytes": 701,
+      "sha256": "d7ed4cff0bec50e31f43e761966812b5ef7c4a697c2ef6c63b8d550476435588"
     },
     {
       "path": "play/clock.js",
-      "bytes": 13164,
-      "sha256": "b4bd78c05af802aee6b4cda99422af0dcc06b0f9a91b33bb4c5fe91bb4d9354b"
+      "bytes": 13296,
+      "sha256": "b689aadce321a8eebb1677296b5fa49a9f78ba940c15a8e03c6914fae76ef59a"
     },
     {
       "path": "play/credits.html",
       "bytes": 1233,
-      "sha256": "a5c2e2465ff3a9703e41acf11a107b5b6d85e98cf517f13b58714b7ee75c981c"
+      "sha256": "24d7b35dd2d278c315bf7f4ee80311edf9cc67d322b8151dae16a886207dba9c"
     },
     {
       "path": "play/gcompris-app.js",
@@ -476,8 +476,8 @@
     },
     {
       "path": "play/host.css",
-      "bytes": 2160,
-      "sha256": "e4bb2cf3b2c959f5c65bb48e41282a9ea7456fc90f95dbe67d8bea36ac76a1c6"
+      "bytes": 2307,
+      "sha256": "b4adc795acbab0560b08f649aad8766760b915c4e0113652a9d39f5f23801a69"
     },
     {
       "path": "play/host.js",
@@ -486,8 +486,8 @@
     },
     {
       "path": "play/index.html",
-      "bytes": 1574,
-      "sha256": "37a5667ea43bc4bfd6b8b5ec603dce18dd3312b765b5f6eb5dba96ac1d2c5682"
+      "bytes": 1683,
+      "sha256": "34a16c3016bf2458b0822019edfe40f6d78a0d0ed4785ae648a847ad67f6049e"
     },
     {
       "path": "play/mp/hand_landmarker.task",
@@ -510,14 +510,24 @@
       "sha256": "225bc06c0f51a9cf31fea0e9e0b0243e9e01fb5ef332cc1a7fa6656dbdfdaabf"
     },
     {
+      "path": "play/notice.js",
+      "bytes": 586,
+      "sha256": "7ab75da5981b677951b92e4b6c6a63934f3416e41b87756462998325f311ef55"
+    },
+    {
       "path": "play/profiles/gcompris-web.json",
       "bytes": 1074,
       "sha256": "e20255be9dba7565f6bb35f3b510440848fec3eccb888730f9d50b4b70b3066d"
     },
     {
+      "path": "preview-notice.txt",
+      "bytes": 33,
+      "sha256": "94adfd374800118a32f35bbd47c79bd3d1c1b15e27866178465e10c03cf723bc"
+    },
+    {
       "path": "sw.js",
-      "bytes": 4375,
-      "sha256": "2c49bbcf7de7c3691b81bd5bb4ab85bbb77630f76196c204a9165420d9bd4cb7"
+      "bytes": 4894,
+      "sha256": "745930e3abb1830e95f04cceeef1aebbd226c701d562f4076f1363403a6cdfb4"
     }
   ]
 }

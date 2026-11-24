@@ -31,6 +31,7 @@ export function createClock(profile = {}) {
   }] : []);
   const arming = stages.map(stage => ({ ...stage, start: null, off: null, until: -Infinity }));
   let lastT = -Infinity;
+  let lastFrameT = -Infinity;
   let lastFrame = null;
   let lastValid = null;
   let lastPoint = { x: 0.5, y: 0.5 };
@@ -56,7 +57,7 @@ export function createClock(profile = {}) {
   const gates = p.create_gates?.() ?? [];
   let gatesAllow = true;
 
-  const accepts = t => Number.isFinite(t) && t > lastT;
+  const accepts = (t, isFrame = true) => Number.isFinite(t) && t > (isFrame ? lastFrameT : lastT);
   const pastLoss = t => lastValid !== null && t - lastValid > p.lost_ms;
   const armed = t => arming.every(stage => t < stage.until) && gatesAllow;
   const pointer = (type, t, point, fields) => ({ type, t, ...point, ...fields });
@@ -226,8 +227,9 @@ export function createClock(profile = {}) {
 
   function advance(t, sample, isFrame) {
     const events = [];
-    if (!accepts(t)) return { accepted: false, events };
-    lastT = t;
+    if (!accepts(t, isFrame)) return { accepted: false, events };
+    lastT = Math.max(lastT, t);
+    if (isFrame) lastFrameT = t;
     releaseDue(events, t);
 
     let resetReason = null;

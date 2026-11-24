@@ -3,6 +3,7 @@
 html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none }
 body { display: grid; grid-template-rows: auto minmax(0, 1fr); height: 100dvh; background: #102632; color: #f1fcf8; font: .875rem/1.4 system-ui, sans-serif }
 header { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem .7rem; padding: .45rem max(.65rem, env(safe-area-inset-right)) .45rem max(.65rem, env(safe-area-inset-left)); background: #173744 }
+#preview-notice { flex-basis: 100%; min-width: 0; padding: .4rem .7rem; border: 1px solid #528180; border-radius: .5rem; overflow-wrap: anywhere }
 header a { color: #aff3da }
 .brand { font-weight: 750; text-decoration: none }
 button { min-height: 44px; border: 1px solid #6f999b; border-radius: .5rem; padding: .4rem .7rem; background: #204652; color: inherit; font: inherit; cursor: pointer }

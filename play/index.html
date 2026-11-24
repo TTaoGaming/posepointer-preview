@@ -10,6 +10,7 @@
 </head>
 <body>
   <header>
+    <div id="preview-notice" role="status" hidden></div>
     <a href="../" class="brand">PosePointer</a>
     <button id="start-camera" type="button" disabled>Start camera</button>
     <button id="pause" type="button" disabled>Pause</button>
@@ -27,5 +28,6 @@
     <output id="app-status" role="status">Starting...</output>
   </main>
   <script type="module" src="./host.js"></script>
+  <script type="module" src="./notice.js"></script>
 </body>
 </html>

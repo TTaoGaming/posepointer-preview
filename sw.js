@@ -1,6 +1,8 @@
 // Copyright Tao. All rights reserved.
 const scope = self.registration.scope;
 const cachePrefix = `${scope}posepointer-`;
+const legacyPrefix = `posepointer:${scope}:`;
+const isOwnCache = name => name.startsWith(cachePrefix) || name.startsWith(legacyPrefix);
 const manifestUrl = new URL('asset-manifest.json', scope);
 const indexFile = 'index.html';
 const pageSuffix = indexFile.slice(indexFile.indexOf('.'));
@@ -52,25 +54,39 @@ self.addEventListener('install', event => {
   })());
 });
 
+async function currentCacheName() {
+  if (installedCache) return installedCache;
+  // The worker may restart. Cache names are listed in creation order.
+  const names = (await caches.keys()).filter(name => name.startsWith(cachePrefix)).reverse();
+  for (const name of names) {
+    const cache = await caches.open(name);
+    const response = await cache.match(manifestUrl);
+    if (!response) continue;
+    try {
+      const manifest = await response.json();
+      if (!Array.isArray(manifest?.files)) continue;
+      const saved = new Set((await cache.keys()).map(request => request.url));
+      if (manifest.files.every(file =>
+        typeof file?.path === 'string' && saved.has(new URL(file.path, scope).href))) {
+        installedCache = name;
+        return name;
+      }
+    } catch {
+      // An unreadable manifest cannot establish that this cache is complete.
+    }
+  }
+}
+
+async function fromCache(key) {
+  const name = await currentCacheName();
+  if (name) return (await caches.open(name)).match(key, matchOptions);
+}
+
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
-    const names = (await caches.keys()).filter(name => name.startsWith(cachePrefix));
-    let current = installedCache;
-    if (!current) {
-      // The worker may restart before activation. Find the newest complete cache.
-      for (const name of names.reverse()) {
-        const cache = await caches.open(name);
-        const response = await cache.match(manifestUrl);
-        if (!response) continue;
-        const manifest = await response.json();
-        const saved = new Set((await cache.keys()).map(request => request.url));
-        if (manifest.files.every(file => saved.has(new URL(file.path, scope).href))) {
-          current = name;
-          break;
-        }
-      }
-    }
-    if (current) await Promise.all(names.filter(name => name !== current).map(name => caches.delete(name)));
+    const current = await currentCacheName();
+    const names = (await caches.keys()).filter(isOwnCache);
+    await Promise.all(names.filter(name => name !== current).map(name => caches.delete(name)));
     await self.clients.claim();
   })());
 });
@@ -86,7 +102,7 @@ self.addEventListener('fetch', event => {
   event.respondWith((async () => {
     const key = new URL(url);
     if (key.pathname.endsWith('/')) key.pathname += indexFile;
-    const file = await caches.match(key, matchOptions);
+    const file = await fromCache(key);
     if (file) {
       if (method === 'HEAD') {
         return new Response(null, { status: file.status, statusText: file.statusText, headers: file.headers });
@@ -95,12 +111,12 @@ self.addEventListener('fetch', event => {
     }
     if (event.request.mode === 'navigate' && !url.pathname.endsWith('/')) {
       key.pathname += `/${indexFile}`;
-      if (await caches.match(key, matchOptions)) {
+      if (await fromCache(key)) {
         url.pathname += '/';
         return Response.redirect(url.href);
       }
       key.pathname = url.pathname + pageSuffix;
-      const page = await caches.match(key, matchOptions);
+      const page = await fromCache(key);
       if (page) return page;
     }
     return fetch(event.request, { redirect: 'error' });

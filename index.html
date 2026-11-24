@@ -14,11 +14,14 @@
   a { color: #aff3da }
   a.play { display: inline-block; margin: .75rem 0 2rem; padding: .65rem 2rem; background: #aff3da; color: #102632; border-radius: .65rem; font-weight: 700; text-decoration: none }
   footer { color: #c3d9dc; font-size: .88rem }
+  #preview-notice { margin-bottom: 1rem; padding: .65rem .85rem; border: 1px solid #528180; border-radius: .5rem; overflow-wrap: anywhere }
 </style>
 <main>
+  <div id="preview-notice" role="status" hidden></div>
   <h1>GCompris with PosePointer</h1>
   <p>Play with touch or a mouse, or use your camera and hold your fingertip steady to click.</p>
   <a class="play" href="./play/">Play</a>
   <footer>GCompris by KDE &middot; <a href="https://invent.kde.org/education/gcompris">Source</a> &middot; <a href="./play/credits.html">Credits and licences</a></footer>
 </main>
+<script type="module" src="./play/notice.js"></script>
 </html>

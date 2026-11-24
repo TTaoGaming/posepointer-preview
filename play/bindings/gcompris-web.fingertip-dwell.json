@@ -5,7 +5,7 @@
   "sense": { "id": "mediapipe-hands", "hands": 1, "pose": "off", "camera": { "profile": "standard" }, "delegate": "CPU" },
   "cursor": { "id": "fingertip", "tip": 8 },
   "filter": { "id": "one-euro", "predictionMs": 20 },
-  "interaction": { "id": "dwell", "dwellMs": 1200, "targetAssist": "off", "hand": "right", "rearmPx": 60, "minFps": 10 },
+  "interaction": { "id": "dwell", "dwellMs": 1200, "targetAssist": "off", "hand": "right", "rearmPx": 60, "minFps": 5 },
   "sink": { "id": "dom-mouse-pointer" },
   "overlays": [
     { "id": "cursor-ring" },
