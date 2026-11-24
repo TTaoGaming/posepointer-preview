@@ -4,41 +4,47 @@ const profiles = {
   low: { width: 480, height: 360, frameRate: 15 }
 };
 const modelAssetPath = './mp/hand_landmarker.task';
-const wasmLoaderPath = './mp/wasm/vision_wasm_internal.js';
-const wasmBinaryPath = './mp/wasm/vision_wasm_internal.wasm';
-const runtimePath = './mp/runtime.js';
+const requiredFiles = [
+  modelAssetPath, './mp/wasm/vision_wasm_internal.js', './mp/wasm/vision_wasm_internal.wasm', './mp/runtime.js'
+];
 
-async function requireFile(path, signal) {
+async function checkFile(path, signal) {
   try {
-    const response = await fetch(path, { method: 'HEAD', signal, redirect: 'error' });
+    const response = await fetch(path, { method: 'HEAD', redirect: 'error', signal });
     if (response.ok) return;
+    throw new Error(`HTTP ${response.status}`);
   } catch (error) {
-    if (signal.aborted) throw error;
+    throw new Error(`Missing MediaPipe file: ${path}`, { cause: error });
   }
-  throw new Error(`Missing MediaPipe file: ${path}`);
 }
 
 export function create({ video }, { hands = 1, camera = {}, delegate = 'CPU' }) {
   if (delegate !== 'CPU' && delegate !== 'GPU') {
     throw new Error(`Unsupported tracking delegate: ${delegate} (use CPU or GPU)`);
   }
-  const { profile = 'standard' } = camera;
+  const profile = camera.profile ?? 'standard';
   if (!Object.hasOwn(profiles, profile)) throw new Error(`Unsupported camera profile: ${profile}`);
-  const defaults = profiles[profile];
-  const { width = defaults.width, height = defaults.height, frameRate = defaults.frameRate } = camera;
-  const wanted = { width, height, frameRate };
-
+  const { width, height, frameRate } = profiles[profile];
+  const wanted = {
+    width: camera.width ?? width, height: camera.height ?? height, frameRate: camera.frameRate ?? frameRate
+  };
+  for (const [key, min, max] of [['width', 160, 1920], ['height', 120, 1080], ['frameRate', 5, 60]]) {
+    if (!Number.isFinite(wanted[key]) || wanted[key] < min || wanted[key] > max ||
+        (key !== 'frameRate' && !Number.isInteger(wanted[key]))) {
+      throw new Error(`Unsupported camera ${key}: ${wanted[key]} (use ${min} to ${max})`);
+    }
+  }
+  const framePeriod = 1000 / wanted.frameRate;
+  const nativeFrames = typeof video.requestVideoFrameCallback === 'function';
+  const checks = new AbortController();
   let active = false;
-  let stream, landmarker, callback, checking;
-  const videoFrames = typeof video.requestVideoFrameCallback === 'function';
+  let stream, landmarker, callback;
 
   function stop() {
     active = false;
-    checking?.abort();
-    if (callback !== undefined) {
-      if (videoFrames) video.cancelVideoFrameCallback(callback);
-      else cancelAnimationFrame(callback);
-    }
+    checks.abort();
+    if (nativeFrames) video.cancelVideoFrameCallback(callback);
+    else cancelAnimationFrame(callback);
     stream?.getTracks().forEach(item => item.stop());
     if (video.srcObject === stream) video.srcObject = null;
     stream = null;
@@ -51,15 +57,15 @@ export function create({ video }, { hands = 1, camera = {}, delegate = 'CPU' }) 
     async start(onFrame, onError) {
       if (!navigator.mediaDevices?.getUserMedia) throw new Error('Camera needs HTTPS or localhost.');
       active = true;
-      checking = new AbortController();
-      for (const path of [modelAssetPath, wasmLoaderPath, wasmBinaryPath, runtimePath]) {
-        await requireFile(path, checking.signal);
-      }
-      const { HandLandmarker } = await import('../mp/runtime.js').catch(() => {
-        throw new Error(`Missing MediaPipe file: ${runtimePath}`);
+      await Promise.all(requiredFiles.map(path => checkFile(path, checks.signal)));
+      if (!active) return;
+      const { FilesetResolver, HandLandmarker } = await import('../mp/runtime.js').catch(error => {
+        throw new Error('Missing MediaPipe file: ./mp/runtime.js', { cause: error });
       });
       if (!active) return;
-      const model = await HandLandmarker.createFromOptions({ wasmLoaderPath, wasmBinaryPath }, {
+      const fileset = await FilesetResolver.forVisionTasks('./mp/wasm');
+      if (!active) return;
+      const model = await HandLandmarker.createFromOptions(fileset, {
         baseOptions: { modelAssetPath, delegate },
         runningMode: 'VIDEO', numHands: hands
       });
@@ -68,7 +74,7 @@ export function create({ video }, { hands = 1, camera = {}, delegate = 'CPU' }) 
         return;
       }
       landmarker = model;
-      const captured = await navigator.mediaDevices.getUserMedia({
+      const camera = await navigator.mediaDevices.getUserMedia({
         audio: false,
         video: {
           width: { ideal: wanted.width }, height: { ideal: wanted.height },
@@ -76,31 +82,29 @@ export function create({ video }, { hands = 1, camera = {}, delegate = 'CPU' }) 
         }
       });
       if (!active) {
-        captured.getTracks().forEach(item => item.stop());
+        camera.getTracks().forEach(item => item.stop());
         return;
       }
-      stream = captured;
+      stream = camera;
       video.srcObject = stream;
       await video.play();
       if (!active) return;
 
-      const interval = 1000 / wanted.frameRate;
-      const minGap = interval * 0.9;
-      let lastFrame, lastDetection = -Infinity, nextDue = -Infinity;
-      function schedule() {
-        callback = videoFrames ? video.requestVideoFrameCallback(tick) : requestAnimationFrame(tick);
+      let lastFrame = -1, lastDetection = -Infinity, nextDetection = -Infinity;
+      function queueFrame() {
+        callback = nativeFrames ? video.requestVideoFrameCallback(tick) : requestAnimationFrame(tick);
       }
       function tick(t, metadata) {
         if (!active) return;
         try {
-          const frameTime = (metadata?.mediaTime ?? video.currentTime) * 1000;
-          const frameId = metadata?.presentedFrames ?? (video.getVideoPlaybackQuality?.().totalVideoFrames || frameTime);
-          if (video.readyState >= 2 && frameId !== lastFrame) {
-            lastFrame = frameId;
-            if (frameTime - lastDetection >= minGap && frameTime >= nextDue - (interval - minGap)) {
-              lastDetection = frameTime;
-              // Tolerate small timestamp jitter while pacing sustained detections at the requested rate.
-              nextDue = Math.max(frameTime + minGap, nextDue + interval);
+          const frame = metadata?.presentedFrames ?? ((video.getVideoPlaybackQuality?.().totalVideoFrames ||
+            video.webkitDecodedFrameCount) || video.currentTime);
+          if (video.readyState >= 2 && frame !== lastFrame) {
+            lastFrame = frame;
+            const tolerance = framePeriod * 0.1;
+            if (t - lastDetection >= framePeriod * 0.9 && t + tolerance >= nextDetection) {
+              lastDetection = t;
+              nextDetection = Math.max(t - tolerance, nextDetection) + framePeriod;
               const result = model.detectForVideo(video, t);
               onFrame({
                 t: performance.now(), mirrored: false, hands: result.landmarks,
@@ -108,12 +112,12 @@ export function create({ video }, { hands = 1, camera = {}, delegate = 'CPU' }) 
               });
             }
           }
-          if (active) schedule();
+          if (active) queueFrame();
         } catch (error) {
           onError(error);
         }
       }
-      schedule();
+      queueFrame();
     },
     stop
   };

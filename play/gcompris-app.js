@@ -16,13 +16,15 @@ export function createApp(frame, profile) {
   async function boot(sink) {
     const url = new URL(profile.iframeUrl, document.baseURI);
     if (url.origin !== location.origin) throw new Error('GCompris needs a same-origin URL.');
+    const directory = new URL('.', url).href;
     await new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         frame.removeEventListener('load', loaded);
         reject(new Error('GCompris page load timed out.'));
       }, profile.start.timeoutMs);
       function loaded() {
-        if (frame.contentDocument?.URL !== url.href) return;
+        const loadedUrl = frame.contentDocument?.URL;
+        if (loadedUrl !== url.href && loadedUrl !== directory) return;
         clearTimeout(timer);
         frame.removeEventListener('load', loaded);
         resolve();
@@ -79,37 +81,47 @@ async function dismissStartupDialogs(win, doc, canvas, sink, profile, ratio) {
   const probe = doc.createElement('canvas');
   probe.width = probe.height = 16;
   const context = probe.getContext('2d', { willReadFrequently: true });
-  const sweep = profile.sweep;
-  const scanInsets = sweep.insets.map(inset => inset * ratio);
-  const readyCanvas = () => {
+  function readyCanvas() {
     const target = doc.querySelector(profile.start.ready) && canvas();
     if (!target) throw new Error('GCompris canvas unavailable during startup dialogs.');
     return target;
-  };
-
+  }
+  const { sweep } = profile;
+  const sweepInsets = sweep.insets.map(inset => inset * ratio);
   for (const step of profile.startupDialogs) {
     const target = readyCanvas();
-    const layout = target.clientWidth < target.clientHeight ? 'portrait' : 'landscape';
+    const rect = target.getBoundingClientRect();
+    const layout = rect.width < rect.height ? 'portrait' : 'landscape';
     const inset = step.layouts[layout].closeCenterInset * ratio;
-    const candidates = [...new Set([inset, ...scanInsets])];
-    const before = await readDialogPaint(win, target, context, candidates);
-    // Retain the ordered fallback when Qt clears the buffer before it can be read.
-    const close = before?.inset ?? (before || step.onlyIfVisible ? null : inset);
-    if (close === null) continue;
-    for (let attempt = 0; attempt < 2; attempt++) {
-      sink.closeDialog(readyCanvas(), close);
-      await delay(step.waitAfterCloseMs);
-      const after = await readDialogPaint(win, readyCanvas(), context, [close]);
-      if (after?.inset == null || (step.verify === 'content-changed' &&
-          !before?.content.every((channel, i) => Math.abs(channel - after.content[i]) < 8))) break;
+    const insets = [...new Set([inset, ...sweepInsets])];
+    const before = await readDialogPaint(win, target, context, insets);
+    if (step.onlyIfVisible && !before?.close) continue;
+    // Qt can clear the drawing buffer before sampling. Keep the stock ordered
+    // close points for the two known dialogs when there is no readable paint.
+    sink.closeDialog(target, before?.close ?? { right: inset, top: inset });
+    await delay(step.waitAfterCloseMs);
+    if (before?.close) {
+      const next = readyCanvas();
+      const after = await readDialogPaint(win, next, context, insets);
+      if (after?.close && before.content.every((channel, i) => Math.abs(channel - after.content[i]) < 8)) {
+        sink.closeDialog(next, after.close);
+        await delay(step.waitAfterCloseMs);
+      }
     }
   }
 
   for (let round = 0; round < sweep.maxRounds; round++) {
     const target = readyCanvas();
-    const match = await readDialogPaint(win, target, context, scanInsets);
-    if (match?.inset != null) sink.closeDialog(target, match.inset);
-    await delay(sweep.waitAfterCloseMs);
+    const paint = await readDialogPaint(win, target, context, sweepInsets);
+    if (paint?.close) {
+      sink.closeDialog(target, paint.close);
+      await delay(sweep.waitAfterCloseMs);
+    } else if (paint) {
+      break;
+    } else {
+      // A cleared buffer says nothing about which dialogs are visible.
+      await delay(sweep.waitAfterCloseMs);
+    }
   }
 }
 
@@ -126,18 +138,23 @@ function readDialogPaint(win, canvas, context, insets) {
         return context.getImageData(0, 0, size, size).data;
       };
       try {
-        // Stock GCButtonCancel paints a white X on #d94444 at the inset from the QML geometry.
-        const inset = insets.find(candidate => {
-          if (candidate <= 0 || 1.7 * candidate > Math.min(width, height)) return false;
-          const icon = sample(width - 1.7 * candidate, .3 * candidate, 1.4 * candidate, 1.4 * candidate, 5);
-          const white = [48, 49, 50].every(i => icon[i] > 230);
-          const red = [2, 10, 14, 22].filter(i => [217, 68, 68].every((value, channel) =>
-            Math.abs(icon[4 * i + channel] - value) < 22));
-          return white && red.length >= 3;
-        });
         const content = sample(width / 4, height / 4, width / 2, height / 2, 16);
-        const readable = content.some((channel, i) => i % 4 !== 3 && channel > 0);
-        resolve(inset !== undefined || readable ? { inset, content } : null);
+        if (!content.some((channel, i) => i % 4 !== 3 && channel > 0)) return resolve(null);
+        // Stock GCButtonCancel paints a white X on #d94444. Probe close to
+        // the scaled QML position in both axes for closely spaced layouts.
+        for (const inset of insets) {
+          for (const [right, top] of [[inset, inset], [inset * .8, inset], [inset * 1.2, inset],
+            [inset, inset * .8], [inset, inset * 1.2]]) {
+            const radius = inset * .7;
+            if (right + radius > width || top + radius > height) continue;
+            const icon = sample(width - right - radius, top - radius, 2 * radius, 2 * radius, 5);
+            const white = [48, 49, 50].every(i => icon[i] > 230);
+            const red = [2, 10, 14, 22].filter(i => [217, 68, 68].every((value, channel) =>
+              Math.abs(icon[4 * i + channel] - value) < 22));
+            if (white && red.length >= 3) return resolve({ close: { right, top }, content });
+          }
+        }
+        resolve({ content });
       } catch {
         resolve(null);
       }

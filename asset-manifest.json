@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "version": "f563ff7a21500ed2",
+  "version": "39afee6a09cee917",
   "file_count": 103,
-  "total_bytes": 128626197,
+  "total_bytes": 128628662,
   "files": [
     {
       "path": "LICENSES/GCompris-COPYING.html",
@@ -21,8 +21,8 @@
     },
     {
       "path": "LICENSES/PosePointer.txt",
-      "bytes": 260,
-      "sha256": "c4ed34b9a92057ed18d8ed98dedd2d155af51ffc57d23833e1ed90894f426bd7"
+      "bytes": 303,
+      "sha256": "03393f39ab1fcb01dfb46fe0faa84fd6187eb5fc1c0cb9147ef9ea412237a1a3"
     },
     {
       "path": "index.html",
@@ -36,13 +36,13 @@
     },
     {
       "path": "play/adapters/dom-mouse-pointer.js",
-      "bytes": 1678,
-      "sha256": "6cae50416828991a0ff9efc05349d2de8fe5f5a4fc6c8b1e26a326a23865a0e0"
+      "bytes": 1773,
+      "sha256": "adb28054bdb26bcc7fa8077b0b5ec2ef0a5fbeaeb41be04a388609c26fcaac4b"
     },
     {
       "path": "play/adapters/dwell.js",
-      "bytes": 2157,
-      "sha256": "925eb37888932e46142a613952bc5aa0814f4c0df93dcbbda55287de2f773fff"
+      "bytes": 1763,
+      "sha256": "eb4df2afbb0cca19ab7bce2d695df33574363b670523ca4f98ce150c3d03af55"
     },
     {
       "path": "play/adapters/fingertip.js",
@@ -51,8 +51,8 @@
     },
     {
       "path": "play/adapters/hand-skin.js",
-      "bytes": 679,
-      "sha256": "7368eccf8331c223cc1013e80ba6ffe0a5d4ea190aa97c146b5597de09c784ed"
+      "bytes": 785,
+      "sha256": "bc6851f57d6e1a836ac481ee7eb89610c7f7da6ba6851d4f2932b0a4aa8805b5"
     },
     {
       "path": "play/adapters/mirror.js",
@@ -66,8 +66,8 @@
     },
     {
       "path": "play/adapters/sense-camera.js",
-      "bytes": 4616,
-      "sha256": "186bf8d7bdf69b248444c2f77dd1faf7979531e646bd6f9d588ead5d407430e9"
+      "bytes": 4883,
+      "sha256": "867ffaa7665bf14e77d72eac7632a732f09af3158c3f0a6ce99fedabdc3179ca"
     },
     {
       "path": "play/adapters/sense-external.js",
@@ -86,13 +86,13 @@
     },
     {
       "path": "play/credits.html",
-      "bytes": 1198,
-      "sha256": "bb813eb7b3c837cf8fc1beb7de7246e77fad33710528e62a4d7acfd93cbc1e27"
+      "bytes": 1233,
+      "sha256": "a5c2e2465ff3a9703e41acf11a107b5b6d85e98cf517f13b58714b7ee75c981c"
     },
     {
       "path": "play/gcompris-app.js",
-      "bytes": 7813,
-      "sha256": "639817624976a8bd392daeb365f3c69cc4a5f03356401b1b046ca746690a7646"
+      "bytes": 8433,
+      "sha256": "7ed246a4763e2d3a08b359d6e4b711bf5a8bd86f116979c2b1906363550db54a"
     },
     {
       "path": "play/gcompris/gcompris-qt.data",
@@ -476,18 +476,18 @@
     },
     {
       "path": "play/host.css",
-      "bytes": 2067,
-      "sha256": "fcb464a33a7002ef119d9060173b375afc662c7c5d236b76f43d739ca8695494"
+      "bytes": 2160,
+      "sha256": "e4bb2cf3b2c959f5c65bb48e41282a9ea7456fc90f95dbe67d8bea36ac76a1c6"
     },
     {
       "path": "play/host.js",
-      "bytes": 9122,
-      "sha256": "0a219cda87addcb9dbe868502911da80fe6e480dfcbd2b24037c53edcf6e2b93"
+      "bytes": 9063,
+      "sha256": "52b3739dd1368bde327052087d17c02ed5fadd8934cddef4e612dab3d06887e2"
     },
     {
       "path": "play/index.html",
-      "bytes": 1588,
-      "sha256": "47cf416166f783ef02080b484487ddca3dfc5117c0ad58e248fbff2ba9c5351a"
+      "bytes": 1574,
+      "sha256": "37a5667ea43bc4bfd6b8b5ec603dce18dd3312b765b5f6eb5dba96ac1d2c5682"
     },
     {
       "path": "play/mp/hand_landmarker.task",
@@ -511,13 +511,13 @@
     },
     {
       "path": "play/profiles/gcompris-web.json",
-      "bytes": 1279,
-      "sha256": "f3a02bbc4c88f6718a7ebed963e9801aa51a4cabf69472711cca7f61175efece"
+      "bytes": 1074,
+      "sha256": "e20255be9dba7565f6bb35f3b510440848fec3eccb888730f9d50b4b70b3066d"
     },
     {
       "path": "sw.js",
-      "bytes": 2497,
-      "sha256": "6f3f44540c64ac16705e3bae76fde3bbfba940f9af271a9124edb76633eb5128"
+      "bytes": 4375,
+      "sha256": "2c49bbcf7de7c3691b81bd5bb4ab85bbb77630f76196c204a9165420d9bd4cb7"
     }
   ]
 }

@@ -42,9 +42,10 @@ export function create({ app }) {
 
   return {
     send, release,
-    closeDialog(canvas, inset) {
+    closeDialog(canvas, { right, top }) {
       const rect = canvas.getBoundingClientRect();
-      const x = rect.right - inset, y = rect.top + inset;
+      const x = rect.right - right, y = rect.top + top;
+      if (x < rect.left || x >= rect.right || y < rect.top || y >= rect.bottom) return;
       emit('pointermove', canvas, x, y);
       emit('pointerdown', canvas, x, y);
       emit('pointerup', canvas, x, y);

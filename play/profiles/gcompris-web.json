@@ -16,36 +16,20 @@
   "startupDialogs": [
     {
       "name": "welcome dialog",
-      "layouts": {
-        "landscape": { "closeCenterInset": 35 },
-        "portrait": { "closeCenterInset": 30 }
-      },
-      "waitAfterCloseMs": 500,
-      "verify": "content-changed"
+      "layouts": { "landscape": { "closeCenterInset": 35 }, "portrait": { "closeCenterInset": 35 } },
+      "waitAfterCloseMs": 500
     },
     {
       "name": "download assets dialog",
-      "layouts": {
-        "landscape": { "closeCenterInset": 35 },
-        "portrait": { "closeCenterInset": 30 }
-      },
-      "waitAfterCloseMs": 500,
-      "verify": "close-button-gone"
+      "layouts": { "landscape": { "closeCenterInset": 35 }, "portrait": { "closeCenterInset": 35 } },
+      "waitAfterCloseMs": 500
     },
     {
       "name": "favorites tooltip dialog",
-      "layouts": {
-        "landscape": { "closeCenterInset": 35 },
-        "portrait": { "closeCenterInset": 30 }
-      },
+      "layouts": { "landscape": { "closeCenterInset": 35 }, "portrait": { "closeCenterInset": 30 } },
       "onlyIfVisible": true,
-      "waitAfterCloseMs": 500,
-      "verify": "close-button-gone"
+      "waitAfterCloseMs": 500
     }
   ],
-  "sweep": {
-    "maxRounds": 4,
-    "waitAfterCloseMs": 350,
-    "insets": [25, 28, 30, 32, 35, 38, 42, 48, 55, 62]
-  }
+  "sweep": { "maxRounds": 4, "waitAfterCloseMs": 400, "insets": [35, 28, 42, 21, 52, 64] }
 }
