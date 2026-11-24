@@ -1,0 +1,36 @@
+{
+  "copyright": "Copyright Tao. All rights reserved.",
+  "iframeUrl": "../play/gcompris/index.html",
+  "shadowRoot": "#qt-shadow-container",
+  "canvas": "canvas",
+  "start": {
+    "selector": "#start",
+    "ready": "body.ready",
+    "loadMessage": "#loadmsg",
+    "timeoutMs": 90000
+  },
+  "firstRun": {
+    "qtLogPrefix": "enter main.qml (run #",
+    "waitAfterReadyMs": 1500
+  },
+  "startupDialogs": [
+    {
+      "name": "welcome dialog",
+      "layouts": { "landscape": { "closeCenterInset": 35 }, "portrait": { "closeCenterInset": 35 } },
+      "waitAfterCloseMs": 500
+    },
+    {
+      "name": "download assets dialog",
+      "layouts": { "landscape": { "closeCenterInset": 35 }, "portrait": { "closeCenterInset": 35 } },
+      "waitAfterCloseMs": 500
+    },
+    {
+      "name": "favorites tooltip dialog",
+      "layouts": { "landscape": { "closeCenterInset": 35 }, "portrait": { "closeCenterInset": 30 } },
+      "onlyIfVisible": true,
+      "waitAfterCloseMs": 500
+    }
+  ],
+  "sweep": { "maxRounds": 4, "waitAfterCloseMs": 400, "insets": [35, 28, 42, 21, 52, 64] },
+  "launch": {"game": "drawletters", "commonArgs": ["--hide-home-button"], "muteArg": "--mute"}
+}
