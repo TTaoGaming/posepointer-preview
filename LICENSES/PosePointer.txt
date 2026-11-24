@@ -1,0 +1,5 @@
+Copyright Tao. All rights reserved.
+
+This notice covers the new PosePointer and GCompris integration code.
+The supplied PosePointer materials did not identify a separate licence grant
+for their own code. MediaPipe's licence is listed on the site credits page.

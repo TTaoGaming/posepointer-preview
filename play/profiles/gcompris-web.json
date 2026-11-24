@@ -1,0 +1,51 @@
+{
+  "copyright": "Copyright Tao. All rights reserved.",
+  "iframeUrl": "./gcompris/index.html",
+  "shadowRoot": "#qt-shadow-container",
+  "canvas": "canvas",
+  "start": {
+    "selector": "#start",
+    "ready": "body.ready",
+    "loadMessage": "#loadmsg",
+    "timeoutMs": 90000
+  },
+  "firstRun": {
+    "qtLogPrefix": "enter main.qml (run #",
+    "waitAfterReadyMs": 1500
+  },
+  "startupDialogs": [
+    {
+      "name": "welcome dialog",
+      "layouts": {
+        "landscape": { "closeCenterInset": 35 },
+        "portrait": { "closeCenterInset": 30 }
+      },
+      "waitAfterCloseMs": 500,
+      "verify": "content-changed"
+    },
+    {
+      "name": "download assets dialog",
+      "layouts": {
+        "landscape": { "closeCenterInset": 35 },
+        "portrait": { "closeCenterInset": 30 }
+      },
+      "waitAfterCloseMs": 500,
+      "verify": "close-button-gone"
+    },
+    {
+      "name": "favorites tooltip dialog",
+      "layouts": {
+        "landscape": { "closeCenterInset": 35 },
+        "portrait": { "closeCenterInset": 30 }
+      },
+      "onlyIfVisible": true,
+      "waitAfterCloseMs": 500,
+      "verify": "close-button-gone"
+    }
+  ],
+  "sweep": {
+    "maxRounds": 4,
+    "waitAfterCloseMs": 350,
+    "insets": [25, 28, 30, 32, 35, 38, 42, 48, 55, 62]
+  }
+}

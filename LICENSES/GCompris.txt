@@ -1,0 +1,14 @@
+Copyright Tao. All rights reserved.
+
+GCompris by the KDE GCompris developers and contributors.
+Source: https://invent.kde.org/education/gcompris
+
+The GCompris QML source in this build carries GPL-3.0-or-later notices.
+GPL version 3: https://www.gnu.org/licenses/gpl-3.0.txt
+The build also includes material from Qt. The supplied Qt launcher identifies
+its terms as LicenseRef-Qt-Commercial OR GPL-3.0-only.
+
+GCompris-COPYING.html is the verbatim licence resource from the supplied
+build's core.rcc. It contains the GNU Affero General Public License v3.
+That bundled resource does not replace the file-level GPL notices.
+Original copyright and licence notices remain in the stock files.

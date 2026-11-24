@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "product": "posepointer-classroom",
+  "app": "gcompris-web",
+  "sense": { "id": "mediapipe-hands", "hands": 1, "pose": "off", "camera": { "profile": "standard" }, "delegate": "CPU" },
+  "cursor": { "id": "fingertip", "tip": 8 },
+  "filter": { "id": "one-euro", "predictionMs": 20 },
+  "interaction": { "id": "dwell", "dwellMs": 1200, "targetAssist": "off", "hand": "right", "rearmPx": 60, "minFps": 10 },
+  "sink": { "id": "dom-mouse-pointer" },
+  "overlays": [
+    { "id": "cursor-ring" },
+    { "id": "hand-skin", "skin": "wireframe" },
+    { "id": "mirror", "opacity": 0.35 }
+  ],
+  "safety": { "activeHandLock": true, "killSwitch": true, "stallRelease": true, "stallMs": 500 }
+}

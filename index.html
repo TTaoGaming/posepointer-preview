@@ -1,21 +1,24 @@
+<!-- Copyright Tao. All rights reserved. -->
 <!doctype html>
 <html lang="en">
-<head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PosePointer preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; object-src 'none'">
+<title>GCompris with PosePointer</title>
 <style>
-  body { font-family: system-ui, sans-serif; margin: 0; min-height: 100vh; display: grid; place-items: center; background: #101418; color: #e8eef4; }
-  main { max-width: 32rem; padding: 2rem; text-align: center; }
-  h1 { font-size: 1.6rem; margin: 0 0 0.75rem; }
-  p { line-height: 1.5; color: #b8c4d0; }
+  * { box-sizing: border-box }
+  html { color-scheme: dark; overscroll-behavior: none }
+  body { margin: 0; min-height: 100dvh; display: grid; place-items: center; padding: 24px; background: #102632; color: #f1fcf8; font: 1rem/1.55 system-ui, sans-serif }
+  main { max-width: 39rem; width: 100%; padding: clamp(1.5rem, 6vw, 4rem); background: #173744; border: 1px solid #528180; border-radius: 1.25rem }
+  h1 { max-width: 14ch; margin: 0; font-size: clamp(2rem, 6vw, 4rem); line-height: 1.06 }
+  a { color: #aff3da }
+  a.play { display: inline-block; margin: .75rem 0 2rem; padding: .65rem 2rem; background: #aff3da; color: #102632; border-radius: .65rem; font-weight: 700; text-decoration: none }
+  footer { color: #c3d9dc; font-size: .88rem }
 </style>
-</head>
-<body>
 <main>
-  <h1>PosePointer preview</h1>
-  <p>This address is live. The first build (GCompris with camera hand input) will appear here after it passes its check.</p>
-  <p>Preview only. Not the published site.</p>
+  <h1>GCompris with PosePointer</h1>
+  <p>Play with touch or a mouse, or use your camera and hold your fingertip steady to click.</p>
+  <a class="play" href="./play/">Play</a>
+  <footer>GCompris by KDE &middot; <a href="https://invent.kde.org/education/gcompris">Source</a> &middot; <a href="./play/credits.html">Credits and licences</a></footer>
 </main>
-</body>
 </html>

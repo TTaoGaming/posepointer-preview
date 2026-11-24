@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c6fb8">
+  <meta name="description" content="GCompris educational activities">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="logo.png">
+  <title>GCompris</title>
+  <style>
+    html, body {
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      height: 100%;
+      background: #102d42;
+      overscroll-behavior: none;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #qtscreen {
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+    #status {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: white;
+      font: 600 18px system-ui, sans-serif;
+      background: #102d42;
+    }
+    #start {
+      margin-top: 1.25rem;
+      padding: 0.7rem 1.2rem;
+      border: 0;
+      border-radius: 0.4rem;
+      color: white;
+      background: #0c6fb8;
+      font: 600 16px system-ui, sans-serif;
+      cursor: pointer;
+    }
+    body.loading #start { display: none; }
+    body.ready #status { display: none; }
+  </style>
+</head>
+<body>
+  <figure id="status">
+    <center style="margin-top:1.5em; line-height:150%">
+      <strong>GCompris</strong><br>
+      <div id="loadmsg">Ready to start</div>
+      <button id="start" type="button">Start</button>
+    </center>
+  </figure>
+  <div id="qtscreen"></div>
+  <script src="gcompris-qt.js"></script>
+  <script src="qtloader.js"></script>
+  <script>
+    let started = false;
+
+    async function init() {
+      if (started)
+        return;
+      started = true;
+      document.body.classList.add("loading");
+
+      if ("serviceWorker" in navigator)
+        // updateViaCache:"none" makes the browser bypass the HTTP cache when
+        // checking service-worker.js for updates, so a new worker is picked up
+        // on the next visit instead of being pinned by GitHub Pages' caching.
+        navigator.serviceWorker.register("service-worker.js", { updateViaCache: "none" });
+
+      const qtscreen = document.getElementById("qtscreen");
+      const status   = document.getElementById("status");
+      const loadmsg  = document.getElementById("loadmsg");
+      loadmsg.textContent = "Loading GCompris...";
+
+      try {
+        const persistentHome = "/home/web_user";
+        const mountPersistentStorage = (module) => {
+          const FS = module.FS;
+          // IDBFS is registered on FS.filesystems by -lidbfs.js; it is not a
+          // bare global in this callback's scope (it only is inside EM_ASM).
+          const IDBFS = FS && FS.filesystems && FS.filesystems.IDBFS;
+          if (!FS || !FS.syncfs || !IDBFS)
+            return;
+
+          module.gcomprisPersistentMounts ??= {};
+          if (!module.gcomprisPersistentMounts[persistentHome]) {
+            FS.mkdirTree(persistentHome);
+            FS.mount(IDBFS, {}, persistentHome);
+            module.gcomprisPersistentMounts[persistentHome] = true;
+          }
+
+          module.addRunDependency("gcompris-idbfs-restore");
+          FS.syncfs(true, err => {
+            if (err)
+              console.error("GCompris persistent filesystem restore failed", err);
+            module.gcomprisPersistentFsReady = true;
+            module.removeRunDependency("gcompris-idbfs-restore");
+          });
+        };
+
+        const instance = await qtLoad({
+          preRun: [mountPersistentStorage],
+          qt: {
+            entryFunction: window.createGComprisApp,
+            containerElements: [qtscreen],
+            onLoaded: () => { document.body.classList.add("ready"); },
+            onExit: (e) => {
+              document.body.classList.remove("loading");
+              document.body.classList.remove("ready");
+              loadmsg.textContent = e.text ?? ("Exit code " + e.code);
+              status.style.display = "grid";
+              console.error("GCompris exited", e);
+            }
+          }
+        });
+      } catch (e) {
+        document.body.classList.remove("loading");
+        loadmsg.textContent = "Load error: " + e.message;
+        console.error(e);
+      }
+    }
+    window.addEventListener("load", () => {
+      const start = document.getElementById("start");
+      start.addEventListener("click", init, { once: true });
+      window.addEventListener("keydown", init, { once: true });
+    });
+  </script>
+</body>
+</html>

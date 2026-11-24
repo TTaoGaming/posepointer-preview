@@ -1,0 +1,22 @@
+/* Copyright Tao. All rights reserved. */
+* { box-sizing: border-box }
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none }
+body { display: grid; grid-template-rows: auto minmax(0, 1fr); height: 100dvh; background: #102632; color: #f1fcf8; font: .875rem/1.4 system-ui, sans-serif }
+header { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem .7rem; padding: .45rem max(.65rem, env(safe-area-inset-right)) .45rem max(.65rem, env(safe-area-inset-left)); background: #173744 }
+header a { color: #aff3da }
+.brand { font-weight: 750; text-decoration: none }
+button { min-height: 44px; border: 1px solid #6f999b; border-radius: .5rem; padding: .4rem .7rem; background: #204652; color: inherit; font: inherit; cursor: pointer }
+button:disabled { opacity: .55; cursor: default }
+#kill { background: #71353e; border-color: #f19da7 }
+#mirror-control { display: flex; gap: .35rem; align-items: center }
+#opacity { width: min(24vw, 8rem); min-height: 38px; accent-color: #aff3da }
+#input-status { flex: 1 1 auto; color: #d6efed }
+#stage { position: relative; isolation: isolate; min-width: 0; overflow: hidden }
+iframe, video, canvas { position: absolute; inset: 0; width: 100%; height: 100%; border: 0 }
+video { object-fit: cover; transform: scaleX(-1); visibility: visible }
+video, canvas, #cursor, #app-status { pointer-events: none }
+[hidden] { display: none !important }
+#cursor { position: absolute; top: 0; left: 0; width: 30px; height: 30px; border-radius: 50%; background: conic-gradient(#8cf8ce var(--progress, 0turn), #102632b8 0); border: 1px solid white; box-shadow: 0 1px 8px #000a; translate: -50% -50%; display: grid; place-items: center }
+#cursor::before { content: ""; width: 17px; height: 17px; border-radius: 50%; background: #fbfffd; border: 2px solid #102632 }
+#cursor[data-pressed="true"]::before { background: #8cf8ce }
+#app-status { position: absolute; inset: 0; display: grid; place-content: center; padding: 1rem; text-align: center; background: #102632e8; font-size: 1.2rem; font-weight: 650 }
