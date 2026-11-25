@@ -1,0 +1,5 @@
+STUB ENGINE DATA (for running the page before the real engine exists; not the shipped engine).
+Capital letter paths: derived from "how-to-write-letters" data/print stroke data, MIT License,
+Copyright (c) 2026 Moti Sorkin, https://github.com/motizzle/how-to-write-letters (outlines from Roboto Bold, Apache-2.0).
+Full texts: licenses/LICENSE (MIT) and licenses/LICENSE-Roboto.txt.
+Digits 0 to 9: drawn fresh for this project by arc recipes in tools/make-items.mjs (no outside source).
