@@ -1,0 +1,15 @@
+{
+  "format": "dot-tracer-set-index/1",
+  "sets": [
+    {
+      "id": "capitals",
+      "name": "Capital A\u2013Z",
+      "file": "capitals.json"
+    },
+    {
+      "id": "demo-abc",
+      "name": "Three-letter demo",
+      "file": "demo-abc.json"
+    }
+  ]
+}
