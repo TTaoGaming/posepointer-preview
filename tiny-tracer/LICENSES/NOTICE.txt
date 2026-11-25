@@ -1,0 +1,13 @@
+index.html, judge.js, and favicon.svg derive from letter-trace, MIT.
+The stock page uses a shared guided judge and in-memory settings. The judge
+retains the stock paths and thresholds and adds reach-the-dot while pressed.
+sw.js replaces the letter-trace worker with a folder-scoped offline cache.
+
+camera/ derives from the PosePointer preview engine. host.js connects the
+existing camera, fingertip, filter, pen, touch priority and overlay ports
+to the letter sheet. tracer-camera.js streams the pinned assets after Start.
+tracer-pointer.js maps pen events to the SVG. mirror.js applies opacity in
+memory. host.css places the video, hand and cursor around the paper layer.
+The binding defines the sheet and an inert edge strip. The hand-skin adapter
+and bundled MediaPipe runtime, model and WASM files are byte copies.
+camera-button.js starts and stops the camera session and displays load progress.

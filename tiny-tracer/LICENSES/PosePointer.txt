@@ -1,0 +1,6 @@
+Copyright Tao. All rights reserved.
+
+This notice covers the new PosePointer and GCompris integration code.
+The supplied PosePointer TypeScript, v0.8 bridge and tablet sources did not
+identify a separate licence grant for their own code.
+The MediaPipe Apache 2.0 licence is linked from the credits page.
