@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<link rel="icon" href="data:,">
+<title>PosePointer Letters</title>
+<style>
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#cfe8ff;touch-action:none;-webkit-user-select:none;user-select:none}
+#sky,#camera,#game,#bgfx{position:fixed;left:0;top:0;width:100%;height:100%}
+#bgfx{z-index:0;pointer-events:none;display:none}
+#sky{z-index:0;background:linear-gradient(#74bdfb,#a9d8ff 50%,#e6f5ff)}
+#camera{z-index:1;object-fit:cover;display:none;pointer-events:none;background:#000}
+#camera.on{display:block}
+#camera.flip{transform:scaleX(-1)}
+#glass{position:fixed;left:0;top:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:hidden}
+#game{z-index:2}
+#note{position:fixed;left:50%;bottom:6px;transform:translateX(-50%);z-index:9;font:600 13px system-ui,sans-serif;color:#fff;background:rgba(20,24,34,.85);padding:4px 10px;border-radius:10px;display:none;pointer-events:none;max-width:94%;text-align:center}
+canvas{display:block}
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<canvas id="bgfx" aria-hidden="true"></canvas>
+<video id="camera" muted playsinline autoplay></video>
+<div id="glass"></div>
+<div id="game" aria-label="Letter tracing activity"></div>
+<div id="note"></div>
+<script type="module" src="./main.js"></script>
+</body>
+</html>
