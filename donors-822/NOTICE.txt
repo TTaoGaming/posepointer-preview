@@ -1,0 +1,12 @@
+NOTICE
+This folder holds three activities from Sugarizer, unmodified except as listed below.
+Sugarizer: https://github.com/llaske/sugarizer
+Release tag v2.0.0, commit 60ccdbcb004de1a706749c7314edfa0d160288b4
+Licence: Apache-2.0 (see the LICENSE file in each activity and LICENSE-sugarizer).
+Activities: Abecedarium, Memorize, Grid Paint.
+
+Changes made to the donor activities (nothing else was edited):
+1. One script tag added to each activity's index.html: it loads the PosePointer loader (pp/pp.js).
+2. One app.json added to each activity folder (PosePointer settings).
+3. One landing page, index.html in this folder (sets a local profile entry the activities need, and links to the three).
+Also added: pp/ (the PosePointer 0.5.2 loader and its files).

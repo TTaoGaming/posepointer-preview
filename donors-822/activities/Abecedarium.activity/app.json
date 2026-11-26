@@ -1,0 +1,34 @@
+{
+  "app": "abecedarium",
+  "title": "Abecedarium",
+  "input": "dwell-fingertip",
+  "cursor": "hand",
+  "view": "onscreen",
+  "look": "plain",
+  "looks": {
+    "plain": {
+      "label": "Plain",
+      "scene": "none",
+      "videoOpacity": 0
+    }
+  },
+  "buttons": {
+    "place": "bottom",
+    "items": [
+      {
+        "label": "Dwell",
+        "preset": "dwell-fingertip",
+        "title": "Hold the fingertip still to press"
+      },
+      {
+        "label": "Pinch",
+        "preset": "pinch-palm-ready",
+        "title": "Pinch to press"
+      }
+    ]
+  },
+  "start": {
+    "label": "Start camera"
+  },
+  "hint": "Hold your index fingertip still on a control to press it."
+}
