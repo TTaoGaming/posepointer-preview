@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./vendor/webawesome/styles/webawesome.css">
+<script type="module" src="./vendor/webawesome/components/button/button.js"></script>
+<script type="module" src="./vendor/webawesome/components/icon/icon.js"></script>
+<title>PosePointer Letters</title>
+<style>
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#cfe8ff;touch-action:none;-webkit-user-select:none;user-select:none}
+#sky,#camera,#game,#bgfx{position:fixed;left:0;top:0;width:100%;height:100%}
+#bgfx{z-index:0;pointer-events:none;display:none}
+#sky{z-index:0;background:linear-gradient(#74bdfb,#a9d8ff 50%,#e6f5ff)}
+#camera{z-index:1;object-fit:cover;display:none;pointer-events:none;background:#000}
+#camera.on{display:block}
+#camera.flip{transform:scaleX(-1)}
+#glass{position:fixed;left:0;top:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:hidden}
+#game{z-index:2}
+#note{font:600 13px system-ui,sans-serif;color:#fff;background:rgba(20,24,34,.85);padding:4px 10px;border-radius:10px;display:none;pointer-events:none;max-width:94%;text-align:center;justify-self:center}
+canvas{display:block}
+
+#controls{position:relative;width:100%;height:100%;z-index:8;pointer-events:none;font-family:system-ui,sans-serif;color:var(--ui-ink)}
+#controls wa-button{pointer-events:auto;filter:drop-shadow(0 8px 18px var(--ui-shadow));--wa-border-radius-medium:24px}
+#controls wa-button::part(base){height:100%;font-weight:750;font-size:clamp(16px,3.2vw,28px);background:var(--ui-glass);backdrop-filter:blur(20px) saturate(1.35);border:1px solid var(--ui-edge);color:var(--ui-ink)}
+#controls wa-button::part(base)::after{content:"";position:absolute;inset:auto 0 0;height:calc(var(--hold-progress,0) * 100%);background:color-mix(in srgb,var(--ui-accent) 38%,transparent);pointer-events:none}
+.stock-icon{font-size:1.15em;display:block}
+#view-title,#view-status{margin:0;padding:.55em 1em;border:1px solid var(--ui-edge);border-radius:999px;background:var(--ui-glass-strong);backdrop-filter:blur(20px);box-shadow:0 8px 24px var(--ui-shadow);text-align:center;justify-self:center}
+#view-title{font-size:clamp(28px,7vw,64px)} #view-status{font-size:clamp(16px,3vw,24px)}
+#logo-card{padding:18px 28px;border:1px solid var(--ui-edge);border-radius:24px;background:var(--ui-glass-strong);backdrop-filter:blur(22px) saturate(1.35);box-shadow:0 12px 36px var(--ui-shadow);text-align:center;min-width:min(82vw,360px);justify-self:center}
+#logo-card p{margin:.3em 0;font-weight:750}#logo-prepared:empty{display:none}
+#settings-panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(94vw,760px);height:min(88vh,680px);padding:24px;overflow:auto;pointer-events:auto;border:1px solid var(--ui-edge);border-radius:30px;background:var(--ui-glass-strong);backdrop-filter:blur(28px) saturate(1.4);box-shadow:0 18px 60px var(--ui-shadow)}
+#settings-panel h2{margin:0 0 18px;font-size:clamp(24px,5vw,42px)} .settings-rows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.settings-rows wa-button{position:relative!important;inset:auto!important;width:100%!important;height:58px!important}
+.screen-flow{height:100%;padding:12px;align-items:center;justify-items:center}
+#start-flow{display:grid;grid-template-rows:auto auto auto auto;align-content:center;gap:clamp(12px,3vh,28px)}
+#letter-flow{display:grid;grid-template-rows:auto minmax(190px,1fr) auto auto;gap:clamp(10px,2vh,18px)}
+#letter-head{display:flex;align-items:center;justify-content:center;gap:12px;width:100%}
+#board-row{width:min(78vw,620px);height:100%;min-height:190px;margin:36px 0 42px}
+#start-row wa-button{width:min(62vw,330px);height:clamp(64px,11vh,96px)}
+#gear-row wa-button,#letter-head wa-button{width:clamp(52px,9vh,74px);height:clamp(52px,9vh,74px)}
+#action-row{display:flex;gap:12px;width:min(94vw,820px);justify-content:center}
+#action-row wa-button{flex:1;max-width:250px;height:clamp(58px,10vh,92px)}
+[hidden]{display:none!important}@media(max-width:520px){.settings-rows{grid-template-columns:1fr}#settings-panel{padding:16px}.screen-flow{padding:8px}#letter-flow{grid-template-rows:auto minmax(220px,1fr) auto auto}#logo-card{padding:12px 20px}}
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<canvas id="bgfx" aria-hidden="true"></canvas>
+<video id="camera" muted playsinline autoplay></video>
+<div id="glass"></div>
+<div id="game" aria-label="Letter tracing activity"></div>
+<section id="controls" aria-live="polite">
+<div id="start-flow" class="screen-flow"><h1 id="view-title"></h1><div id="logo-card"><p id="logo-prepared"></p><p id="logo-made"></p></div><div id="start-row"></div><div id="gear-row"></div></div>
+<div id="letter-flow" class="screen-flow" hidden><div id="letter-head"><p id="view-status"></p></div><div id="board-row" aria-hidden="true"></div><div id="note"></div><div id="action-row"></div></div>
+<div id="settings-panel" hidden><h2></h2><div class="settings-rows"></div></div>
+</section>
+<script type="module" src="./main.js"></script>
+</body>
+</html>

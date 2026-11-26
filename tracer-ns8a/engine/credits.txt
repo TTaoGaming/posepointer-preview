@@ -1,0 +1,9 @@
+Credits
+
+Letter paths: derived from "how-to-write-letters" data/print stroke data,
+MIT License, Copyright (c) 2026 Moti Sorkin, https://github.com/motizzle/how-to-write-letters
+The printed outlines in that project come from Roboto Bold (Apache License 2.0); the stroke points were snapped to that ink.
+Full texts: licenses/how-to-write-letters-MIT.txt and licenses/Roboto-Apache-2.0.txt.
+
+Digits 0 to 9 and engine files: made fresh for this project; no outside source.
+Theme values adapted from the supplied project theme example.

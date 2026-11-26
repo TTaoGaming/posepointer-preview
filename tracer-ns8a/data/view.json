@@ -1,0 +1,52 @@
+{
+  "labels": {
+    "title": "PosePointer Letters",
+    "start": "Start",
+    "back": "Back",
+    "again": "Again",
+    "next": "Next",
+    "settings": "Settings",
+    "close": "Close",
+    "camera": "Camera",
+    "prepared": "Prepared for",
+    "made": "Made by PosePointer",
+    "trace": "Trace the letter",
+    "success": "Great job! That's",
+    "hand": "Show your hand",
+    "copy": "Copy these settings",
+    "previous": "Previous page",
+    "following": "Next page"
+  },
+  "icons": {
+    "start": "play",
+    "back": "arrow-left",
+    "again": "rotate-right",
+    "next": "arrow-right",
+    "gear": "gear",
+    "close": "check",
+    "minus": "minus",
+    "plus": "plus"
+  },
+  "layout": {
+    "layer": 8,
+    "controlGap": 12,
+    "radius": 24,
+    "panelWidth": "min(94vw, 760px)",
+    "panelHeight": "min(88vh, 680px)",
+    "statusTop": 12,
+    "statusClearance": 76,
+    "boardInset": 32,
+    "phoneBreakpoint": 520
+  },
+  "theme": {
+    "glass": "rgba(12,18,31,.78)",
+    "glassStrong": "rgba(9,14,25,.9)",
+    "ink": "#ffffff",
+    "edge": "rgba(255,255,255,.34)",
+    "shadow": "rgba(3,7,16,.45)",
+    "accent": "#ffb020",
+    "focus": "#8db8ff"
+  },
+  "iconRoot": "./vendor/icons/",
+  "iconSuffix": ".svg"
+}
