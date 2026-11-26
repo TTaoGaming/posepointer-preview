@@ -1,20 +1,36 @@
 {
+  "about": "Overlay 831 (Tao entry 831): full-screen camera mirror above the app at 20 percent by default, hand wireframe on top, fingertip cursor always shown. Settings only: view mirror, looks with videoOpacity, cursor hand. The two Mirror buttons switch the camera opacity; Dwell and Pinch switch the input.",
   "app": "memorize",
   "title": "Memorize",
   "input": "dwell-fingertip",
   "cursor": "hand",
-  "view": "onscreen",
-  "look": "plain",
+  "view": "mirror",
+  "look": "mirror20",
   "looks": {
-    "plain": {
-      "label": "Plain",
-      "scene": "none",
-      "videoOpacity": 0
+    "mirror20": {
+      "label": "Mirror 20%",
+      "scene": "skeleton",
+      "videoOpacity": 0.2
+    },
+    "mirror50": {
+      "label": "Mirror 50%",
+      "scene": "skeleton",
+      "videoOpacity": 0.5
     }
   },
   "buttons": {
     "place": "bottom",
     "items": [
+      {
+        "label": "Mirror 20%",
+        "look": "mirror20",
+        "title": "Camera mirror at 20 percent"
+      },
+      {
+        "label": "Mirror 50%",
+        "look": "mirror50",
+        "title": "Camera mirror at 50 percent"
+      },
       {
         "label": "Dwell",
         "preset": "dwell-fingertip",
@@ -29,6 +45,5 @@
   },
   "start": {
     "label": "Start camera"
-  },
-  "hint": "Hold your index fingertip still on a control to press it."
+  }
 }
