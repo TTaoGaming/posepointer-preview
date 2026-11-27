@@ -1,0 +1,28 @@
+{
+  "about": "The anatomy mirror as one PosePointer configuration (app@1, web 0.2.0+). No app code: the page is one /pp/pp.js tag. input mirror-dwell (point-dwell with a speed limit of 8 so the cursor keeps up with a fast fingertip): cursor on the index fingertip, exactly where the mirror shows it (0.2.1), point to arm for 10 s, hold still 0.8 s to press, a fist disarms (chosen over dwell-fingertip by tools/app-false-clicks.mjs: 0 vs 10 presses on the no-pointing clip). cursor buttons (0.2.2): the cursor and its dwell fill show only while the fingertip is on a button; from 0.5.1 a dwell also counts only on a button, so the page never clicks anywhere else. Change input to pinch-palm-ready for pinch clicks, or cursor to hand to show it whenever a hand is seen; change looks or buttons here.",
+  "app": "anatomy-mirror",
+  "title": "Anatomy mirror",
+  "input": "mirror-dwell",
+  "cursor": "buttons",
+  "view": "mirror",
+  "look": "anatomy",
+  "settings": {"labelCount": 5},
+  "looks": {
+    "anatomy": { "label": "Anatomy", "scene": "anatomy", "videoOpacity": 1, "layers": { "bones": true, "muscles": true, "arteries": true, "veins": true }, "muscleOpacity": 0.6, "handEnd": "fade-4" },
+    "xray": { "label": "X-ray", "scene": "anatomy", "videoOpacity": 0.25, "layers": { "bones": true, "muscles": true, "arteries": true, "veins": true }, "muscleOpacity": 0.6, "handEnd": "fade-4" },
+    "bones": { "label": "Bones", "scene": "anatomy", "videoOpacity": 1, "layers": { "bones": true, "muscles": false, "arteries": false, "veins": false }, "handEnd": "fade-4" },
+    "lines": { "label": "Lines", "scene": "skeleton", "videoOpacity": 1 }
+  },
+  "buttons": {
+    "place": "top",
+    "items": [
+      { "label": "Anatomy", "look": "anatomy", "title": "Bones, muscles and vessels over the camera" },
+      { "label": "X-ray", "look": "xray", "title": "Anatomy with the camera faded to a quarter" },
+      { "label": "Bones", "look": "bones", "title": "Bones only" },
+      { "label": "Lines", "look": "lines", "title": "Hand wireframe; lightest, no 3D" }
+    ]
+  },
+  "start": { "label": "Start the mirror" },
+  "hint": "Point at a button with your index finger and hold still to press it.",
+  "credit": "Anatomy adapted from BodyParts3D, © DBCLS (dbarchive.biosciencedbc.jp/en/bodyparts3d), CC BY 4.0 (creativecommons.org/licenses/by/4.0)"
+}

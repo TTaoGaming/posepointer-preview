@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anatomy mirror</title>
+<style>
+html, body { margin: 0; height: 100%; background: #080808; overflow: hidden; touch-action: none; }
+@media (max-width: 599px) {
+  .mirror-running > div > p[role="status"] { display: none; }
+  .mirror-running > footer {
+    width: 1px; height: 1px; padding: 0 !important;
+    overflow: hidden; clip-path: inset(50%);
+  }
+  .mirror-running [data-posepointer-button] { min-height: clamp(72px, 9vh, 100px) !important; }
+}
+[data-pp-labels] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: repeat(var(--plate-count, 5), minmax(max-content, 1fr));
+  align-items: center;
+  justify-items: start;
+  padding: var(--rail-top, 0px) max(8px, env(safe-area-inset-right))
+           calc(32px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+}
+[data-pp-label] {
+  position: static !important;
+  grid-column: 1;
+  width: clamp(136px, 29vw, 240px) !important;
+  min-height: max-content;
+  padding-block: 2px;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+/* If a part reaches the rail, paint the transparent anatomy canvas over the plate.
+   Keep the loader's strokes and dots visible on the surface of the part. */
+[data-posepointer-view="mirror"] > canvas[data-posepointer-scene] { z-index: 1; }
+[data-pp-leaders] { z-index: 2; }
+#watermark {
+  position: fixed;
+  bottom: calc(6px + env(safe-area-inset-bottom));
+  right: max(8px, env(safe-area-inset-right));
+  z-index: 2147483647;
+  pointer-events: none;
+  user-select: none;
+  white-space: pre;
+  color: white;
+  font: 13px/1.2 system-ui, sans-serif;
+  text-shadow: 0 1px 3px black;
+}
+</style>
+</head>
+<body>
+<script src="pp/pp.js" data-app="anatomy-mirror" data-config="app.json"></script>
+<script>
+(async () => {
+  await window.PosePointerReady;
+  const app = await window.PosePointerApp;
+  const host = document.querySelector('[data-pp-labels]');
+  const bar = app.buttons.el;
+  const credit = document.querySelector('body > footer');
+  let right = false;
+  const rowsByLook = new Map();
+  host.style.setProperty('--plate-count', app.settings.labelCount);
+
+  function pinLabels() {
+    const plates = [...host.querySelectorAll('[data-pp-label]')];
+    if (!plates.length) return;
+    // Remember a part's slot even if it disappears and the loader recreates its plate.
+    if (!rowsByLook.has(app.look)) rowsByLook.set(app.look, new Map());
+    const rows = rowsByLook.get(app.look);
+    for (const plate of plates) {
+      const id = plate.dataset.partId;
+      if (!rows.has(id)) rows.set(id, String(rows.size + 1));
+      if (plate.style.gridRowStart !== rows.get(id)) plate.style.gridRowStart = rows.get(id);
+    }
+    // The loader's SVG spans the host in CSS pixels. Keep its part endpoints.
+    const origin = host.getBoundingClientRect();
+    const ports = new Map(plates.map(plate => [plate.dataset.partId, plate.getBoundingClientRect()]));
+    for (const line of host.querySelectorAll('[data-pp-leader]')) {
+      const rect = ports.get(line.dataset.partId);
+      if (!rect) continue;
+      line.setAttribute('x1', (right ? rect.left : rect.right) - origin.left);
+      line.setAttribute('y1', rect.top + rect.height / 2 - origin.top);
+    }
+  }
+
+  function fitRail() {
+    const bottom = Math.max(bar.getBoundingClientRect().bottom, credit?.getBoundingClientRect().bottom || 0);
+    host.style.setProperty('--rail-top', (bottom + 4) + 'px');
+    pinLabels();
+  }
+  app.on('start', result => {
+    if (result?.ok) document.body.classList.add('mirror-running');
+    fitRail();
+  });
+  app.on('stop', () => { document.body.classList.remove('mirror-running'); fitRail(); });
+  const resize = new ResizeObserver(fitRail);
+  resize.observe(bar);
+  if (credit) resize.observe(credit);
+  window.addEventListener('resize', fitRail);
+  // A draw writes y2 on both strokes. Our x1/y1 writes cannot retrigger this observer.
+  new MutationObserver(pinLabels).observe(host, { subtree: true, childList: true, attributeFilter: ['y2'] });
+  fitRail();
+
+  try {
+    const response = await fetch('page-settings.json', { cache: 'no-store' });
+    if (!response.ok) return;
+    const settings = await response.json();
+    right = settings?.labelSide === 'right';
+    host.style.justifyItems = right ? 'end' : 'start';
+    pinLabels();
+    if (typeof settings?.watermark === 'string' && settings.watermark.length) {
+      const mark = document.createElement('span');
+      mark.id = 'watermark';
+      mark.textContent = settings.watermark;
+      document.body.append(mark);
+    }
+  } catch { /* The left rail is already in place. */ }
+})().catch(() => {}); // The loader displays its own startup errors.
+</script>
+</body>
+</html>
