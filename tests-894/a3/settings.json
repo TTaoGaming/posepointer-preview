@@ -1,0 +1,45 @@
+{
+  "adapters": { "stroke_data": "pointlist", "trace_rule": "stroke", "view": "canvas" },
+  "files": { "pointlist": "data/pointlist.json", "svgpath": "data/svgpath.json", "lessons": "data/lessons.json", "audioManifest": "old/audio/manifest.json" },
+  "initial": { "glyph": "A", "tolerance": "gentle", "starKey": "letterTracing.stars" },
+  "curveSteps": 16,
+  "dots": { "spacing": 22, "radius": 7 },
+  "box": { "width": 100, "height": 140 },
+  "fill": { "cell": 2, "thick": 22, "brush": 10, "goal": 0.8 },
+  "layout": { "padding": 18, "minScale": 0.5, "maxDpr": 3, "minSide": 2, "pickerBox": "-8 -4 116 148" },
+  "timing": { "tip": 2200, "demo": 1500, "demoGap": 650, "demoLoops": 2, "demoDelay": 350, "nextTap": 900, "dwellButton": 900, "dwellStart": 500, "halo": 1200 },
+  "hover": { "gentle": 18, "normal": 12.6, "careful": 9, "leaveFactor": 1.3 },
+  "voice": { "language": "en-US", "rate": 0.8, "pitch": 1.1, "pause": 120, "timeout": 2500, "perChar": 120 },
+  "labels": {
+    "upper": "capital {key}", "lower": "small {key}", "letter": "Letter {name}", "shape": "{name}",
+    "board": "Tracing board: {name}, {count} {unit}", "stroke": "stroke", "strokes": "strokes",
+    "trace": "Press on the glowing dot and trace the path.", "dots": "Touch the glowing dots in order.",
+    "fill": "Paint inside the letter or shape.", "miss": "Start on the glowing dot",
+    "retry": "Lift up and start again at the glowing dot", "lift": "Good! Lift your finger. Next stroke {next} of {count}.",
+    "traced": "Great job! You traced {name}.", "filled": "Great job! You filled {name}.", "praise": "Great job!",
+    "hoverOn": "Hover mode: hold still on a button or the glowing dot", "hoverOff": "Hover mode off: press to trace",
+    "soundOn": "Sound: on", "soundOff": "Sound: off", "noVoice": "No local voice is available on this device."
+  },
+  "ruler": {
+    "inset": 12,
+    "lines": [
+      { "y": 10, "color": "#dbe4fb", "width": 2, "dash": [10,10] },
+      { "y": 60, "color": "#dbe4fb", "width": 2, "dash": [10,10] },
+      { "y": 100, "color": "#9fb3ec", "width": 3, "dash": [] },
+      { "y": 130, "color": "#e6ecfb", "width": 2, "dash": [3,9] }
+    ]
+  },
+  "paint": {
+    "guide": "#d9e5ff", "center": "#8fa6ea", "progress": "#8be0b3", "finished": "#2fb86b",
+    "guideWidth": 11, "centerWidth": 1.1, "dash": 2, "gap": 5, "minGap": 10,
+    "trail": "rgba(255,112,40,0.88)", "trailWidth": 14, "trailLimit": 4000, "trailTrim": 1000,
+    "marker": "#e8edfb", "markerText": "#7b88b3", "markerRadius": 12, "markerFont": "700 14px system-ui, sans-serif",
+    "start": "#ffd43b", "outline": "#f08c00", "number": "#7a4a00", "startWidth": 4,
+    "startScale": 6.5, "minStart": 16, "numberFont": "800 {size}px system-ui, sans-serif",
+    "halo": "rgba(255,170,0,0.5)", "haloStart": 1.2, "haloGrow": 1.3, "glow": 22,
+    "dotRadius": 4, "dotOutline": "#7b88b3", "hint": "rgba(255,170,0,0.45)", "hintBall": "#fff", "hintRadius": 17,
+    "rainbow": ["#ff6b6b","#ffa94d","#ffd43b","#51cf66","#339af0","#cc5de8"],
+    "bubble": "#eef3ff", "bubbleEdge": "#7d93da", "edgeWidth": 7, "inkScale": 4,
+    "fillHue": 300, "fillChroma": "88% 56%", "barTrack": "rgba(38,48,79,0.15)", "barWidth": 260, "barHeight": 8, "barY": 10
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "presets": {
+    "gentle":  { "start": 20, "corridor": 16, "skip": 28, "leash": 40 },
+    "normal":  { "start": 14, "corridor": 11, "skip": 24, "leash": 30 },
+    "careful": { "start": 10, "corridor": 7, "skip": 20, "leash": 22 }
+  },
+  "defaultTolerance": "gentle",
+  "spacing": 5,
+  "jumpFraction": 0.3,
+  "minHeight": 70,
+  "epsilon": 1e-9,
+  "endpointEpsilon": 1e-6,
+  "endSlackCheckpoints": 2
+}

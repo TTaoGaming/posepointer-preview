@@ -1,0 +1,12 @@
+{
+  "about": "Which PosePointer each donor page runs. Only 0.5.2 is published here.",
+  "default": "0.5.2",
+  "versions": [
+    "0.5.2"
+  ],
+  "apps": {
+    "abecedarium": "0.5.2",
+    "memorize": "0.5.2",
+    "gridpaint": "0.5.2"
+  }
+}

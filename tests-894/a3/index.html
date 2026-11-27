@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Trace a Letter</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-mode="trace">
+  <header class="top">
+    <div><h1>Trace a Letter</h1><small class="asset-note">Motion input · PLACEHOLDER(pp-assets)</small></div>
+    <div class="seg modes" role="group" aria-label="Activity">
+      <button id="traceModeBtn" class="btn seg-btn" type="button" aria-pressed="true">Trace</button>
+      <button id="fillModeBtn" class="btn seg-btn" type="button" aria-pressed="false">Fill</button>
+    </div>
+    <div class="top-right">
+      <button id="soundBtn" class="btn small" type="button" aria-pressed="true" aria-label="Sound: on">
+        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/><path id="soundWaves" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="stars" role="status" aria-label="Stars earned">
+        <svg viewBox="-12 -12 24 24" width="30" height="30" aria-hidden="true"><path d="M0-10 3 -3 10-3 4.5 1.5 6.5 9 0 4.8-6.5 9-4.5 1.5-10-3-3-3z" fill="#ffc53d" stroke="#e8a317" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        <span id="starCount">0</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="board" aria-label="Tracing board">
+    <canvas id="stage" role="img" aria-label="Tracing board"></canvas>
+    <div id="card" class="card" aria-hidden="true"><span id="cardLetters" class="card-letters"></span><span id="cardEmoji" class="card-emoji"></span><span id="cardWord" class="card-word"></span></div>
+    <div id="tip" class="tip" aria-hidden="true"></div>
+  </main>
+
+  <section class="dock" aria-label="Controls">
+    <div id="picker" class="strip" role="group" aria-label="Pick a letter"></div>
+    <div class="actions">
+      <div class="seg" role="group" aria-label="Capital or small letters">
+        <button id="upperBtn" class="btn seg-btn" type="button" aria-pressed="true">ABC</button>
+        <button id="lowerBtn" class="btn seg-btn" type="button" aria-pressed="false">abc</button>
+      </div>
+      <button id="hearBtn" class="btn" type="button" aria-label="Hear the letter">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Hear it</span>
+      </button>
+      <button id="hintBtn" class="btn" type="button">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        <span>Show me</span>
+      </button>
+      <button id="againBtn" class="btn" type="button">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" fill="currentColor"/></svg>
+        <span>Again</span>
+      </button>
+      <button id="hoverBtn" class="btn" type="button" aria-pressed="false" aria-label="Hover mode: off. Hold the pointer still on a button or dot to press it.">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M9 11V5a2 2 0 1 1 4 0v5l5 1.5c1 .3 1.5 1 1.3 2L18 19c-.2.6-.7 1-1.4 1H11c-.6 0-1.1-.3-1.4-.8L6 14l1.5-1.2L9 14z" fill="currentColor"/></svg>
+        <span>Hover</span>
+      </button>
+      <button id="nextBtn" class="btn primary" type="button">
+        <span>Next</span>
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <div id="ring" class="ring" aria-hidden="true"></div>
+  <div id="live" class="sr" aria-live="polite"></div>
+  <noscript><p class="noscript">This app needs JavaScript to draw and track tracing.</p></noscript>
+
+  <script type="module" src="./dist/main.js"></script>
+  <script src="../pp/pp.js" data-app="letter-tracing-strokes" data-autostart data-preset="pinch-palm-ready" data-view="none" data-assets="vendor/"></script>
+</body>
+</html>

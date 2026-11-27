@@ -1,0 +1,10 @@
+@import url("./old/style.css");
+
+.asset-note { display: block; font-size: .72rem; color: var(--ink); overflow-wrap: anywhere; }
+.title { min-width: 0; }
+@media (max-width: 520px) {
+  .top { flex-wrap: wrap; gap: 4px; }
+  .title { flex: 1 0 100%; }
+  .title h1 { display: inline; margin-right: .5rem; }
+  .asset-note { display: inline; }
+}
